@@ -1,0 +1,9 @@
+{
+    "name": "apiato/documentation-generator-container",
+    "description": "An Apiato container which can creates a documentation from API annotations in your source code.",
+    "type": "apiato-container",
+    "license": "MIT",
+    "require": {
+        "vyuldashev/laravel-openapi": "^1.11.0"
+    }
+}
