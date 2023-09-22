@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Containers\AppSection\User\UI\API\Documentation\Parameters;
+namespace App\Containers\AppSection\Authentication\UI\API\Documentation\Parameters;
 
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 use Vyuldashev\LaravelOpenApi\Factories\ParametersFactory;
 
-class UpdateUserParameters extends ParametersFactory
+class LoginProxyForWebClient extends ParametersFactory
 {
     /**
      * @return Parameter[]
@@ -15,11 +15,12 @@ class UpdateUserParameters extends ParametersFactory
     {
         return [
             Parameter::query()
-                ->name('name')
+                ->name('email'),
+            Parameter::query()
+                ->name('password')
                 ->description('Parameter description')
                 ->required(false)
                 ->schema(Schema::string()),
-
         ];
     }
 }

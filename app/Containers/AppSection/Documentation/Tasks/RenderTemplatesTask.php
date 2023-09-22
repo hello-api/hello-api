@@ -16,8 +16,8 @@ class RenderTemplatesTask extends AbstractTask
 
     public function __construct()
     {
-        $this->templatePath = $this->getPathInDocumentationContainer('/ApiDocJs/Headers/header.template' . config('documentation.locale', 'en') . '.md');
-        $this->outputPath = $this->getPathInDocumentationContainer('/UI/WEB/Views/documentation/header.md');
+        $this->templatePath = $this->getPathInDocumentationContainer('/Headers/header.template' . config('documentation.locale', 'en') . '.md');
+        $this->outputPath = $this->getPathInDocumentationContainer('/UI/WEB/Views/swagger/header.md');
         $this->replaceArray = [
             'api.domain.test' => config('apiato.api.url'),
             '{{rate-limit-expires}}' => config('apiato.api.throttle.expires'),
@@ -56,9 +56,7 @@ class RenderTemplatesTask extends AbstractTask
 
         $headerMarkdownContent = $this->replaceMarkdownContent($headerMarkdownContent, $this->replaceArray);
 
-        // this is what the apidoc.json file will point to, to load the header.md
-        // write the actual file
-        file_put_contents($this->outputPath, $headerMarkdownContent);
+        $this->fileForceContents($this->outputPath, $headerMarkdownContent);
 
         return $this->outputPath;
     }
@@ -70,5 +68,26 @@ class RenderTemplatesTask extends AbstractTask
         }
 
         return $markdownContent;
+    }
+
+    // file_put_contents() fails if you try to put a file in a directory that doesn't exist.
+    // this creates the directory if it doesn't exist.
+    private function fileForceContents(string $dir, string $contents): void
+    {
+        $parts = explode('/', $dir);
+        $file = array_pop($parts);
+        $dir = '';
+
+        foreach ($parts as $key => $part) {
+            if (0 === $key) {
+                continue;
+            }
+
+            $dir .= "/{$part}";
+            if (!is_dir($dir) && !mkdir($dir)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
+            }
+        }
+        file_put_contents("{$dir}/{$file}", $contents);
     }
 }

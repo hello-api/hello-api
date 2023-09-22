@@ -10,11 +10,29 @@ class Controller extends AbstractWebController
 {
     public function showPrivateDocs(GetPrivateDocumentationRequest $request)
     {
-        return view('vendor@documentation::documentation.private.index');
+        return view('appSection@documentation::swagger.index', [
+            'urls' => [
+                [
+                    'name' => 'Private',
+                    'url' => config('apiato.api.url') . '/assets/documentation/json/openapi.private.json',
+                ],
+                [
+                    'name' => 'Public',
+                    'url' => config('apiato.api.url') . '/assets/documentation/json/openapi.public.json',
+                ],
+            ],
+        ]);
     }
 
     public function showPublicDocs(GetPublicDocumentationRequest $request)
     {
-        return view('vendor@documentation::documentation.public.index');
+        return view('appSection@documentation::swagger.index', [
+            'urls' => [
+                [
+                    'name' => 'Public',
+                    'url' => config('apiato.api.url') . '/assets/documentation/json/openapi.public.json',
+                ],
+            ],
+        ]);
     }
 }

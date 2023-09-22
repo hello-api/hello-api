@@ -6,22 +6,11 @@ return [
     | Locale
     |--------------------------------------------------------------------------
     |
-    | Language header docs
+    |  Header docs Language
     |
     */
 
     'locale' => '.' . env('APIDOC_LOCALE', 'en'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Executable
-    |--------------------------------------------------------------------------
-    |
-    | Specify how you run or access the `apidoc` tool on your machine.
-    |
-    */
-
-    'executable' => 'node_modules/.bin/apidoc',
 
     /*
     |--------------------------------------------------------------------------
@@ -77,7 +66,7 @@ return [
     | Specify the Section name where the Documentation Container is located.
     |
     */
-    'section_name' => 'Vendor',
+    'section_name' => 'AppSection',
 
     /*
     |--------------------------------------------------------------------------
@@ -113,15 +102,4 @@ return [
     */
 
     'access-private-docs-roles' => [],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Enable Sending Sample Request
-    |--------------------------------------------------------------------------
-    |
-    | Enable sending of sample request
-    |
-    */
-
-    'enable-sending-sample-request' => true,
 ];

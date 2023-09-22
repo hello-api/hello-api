@@ -10,7 +10,7 @@ class GenerateOpenApiSpecCommand extends AbstractConsoleCommand
     protected $signature = 'apiato:openapi';
     protected $description = 'Generate OpenAPI specification';
 
-    public function handle(): void
+    final public function handle(): void
     {
         app(GenerateOpenApiDocumentationAction::class)->run($this);
     }

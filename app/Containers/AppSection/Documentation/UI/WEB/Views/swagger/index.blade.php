@@ -14,10 +14,10 @@
 <body>
 <div id="swagger-ui"></div>
 <script>
-    const specsUrl = @json(config('app.url') . "/assets/documentation/json/openapi.json", JSON_THROW_ON_ERROR);
+    const specsUrls = @json($urls, JSON_THROW_ON_ERROR);
 </script>
-<script src="{{config('app.url').'/assets/documentation/js/swagger-ui-bundle.js'}}" charset="UTF-8"></script>
-<script src="{{config('app.url').'/assets/documentation/js/swagger-ui-standalone-preset.js'}}" charset="UTF-8"></script>
-<script src="{{config('app.url').'/assets/documentation/js/swagger-initializer.js'}}" charset="UTF-8"></script>
+<script src="{{config('apiato.api.url').'/assets/documentation/js/swagger-ui-bundle.js'}}" charset="UTF-8"></script>
+<script src="{{config('apiato.api.url').'/assets/documentation/js/swagger-ui-standalone-preset.js'}}" charset="UTF-8"></script>
+<script src="{{config('apiato.api.url').'/assets/documentation/js/swagger-initializer.js'}}" charset="UTF-8"></script>
 </body>
 </html>

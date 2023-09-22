@@ -3,7 +3,13 @@
     "description": "An Apiato container which can creates a documentation from API annotations in your source code.",
     "type": "apiato-container",
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Mohammad-Alavi/laravel-openapi.git"
+        }
+    ],
     "require": {
-        "vyuldashev/laravel-openapi": "^1.11.0"
+        "vyuldashev/laravel-openapi": "dev-master"
     }
 }
