@@ -60,23 +60,13 @@
                 "deprecated": true
             }
         },
-        "\/v1\/users\/{wat}": {
+        "\/v1\/users": {
             "get": {
                 "tags": [
                     "user"
                 ],
                 "summary": "Get all users",
                 "description": "Get all users from the database.",
-                "parameters": [
-                    {
-                        "name": "wat",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Successful response",
@@ -138,6 +128,9 @@
                 },
                 "security": [
                     {
+                        "SomethingElse": []
+                    },
+                    {
                         "BearerToken": []
                     }
                 ]
@@ -149,7 +142,16 @@
             "BearerToken": {
                 "type": "http",
                 "scheme": "bearer"
+            },
+            "SomethingElse": {
+                "type": "http",
+                "scheme": "bearer"
             }
         }
-    }
+    },
+    "security": [
+        {
+            "BearerToken": []
+        }
+    ]
 }

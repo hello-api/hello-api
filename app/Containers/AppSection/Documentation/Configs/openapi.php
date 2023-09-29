@@ -1,5 +1,6 @@
 <?php
 
+use App\Containers\AppSection\User\UI\API\Documentation\SecuritySchemes\AnotherBearerTokenSecurityScheme;
 use App\Containers\AppSection\User\UI\API\Documentation\SecuritySchemes\BearerTokenSecurityScheme;
 
 return [
@@ -46,7 +47,7 @@ return [
             ],
 
             'security' => [
-                // GoldSpecDigital\ObjectOrientedOAS\Objects\SecurityRequirement::create()->securityScheme('JWT'),
+                [BearerTokenSecurityScheme::class],
             ],
 
             // Non standard attributes used by code/doc generation tools can be added here
@@ -107,8 +108,12 @@ return [
             ],
 
             'security' => [
-                // GoldSpecDigital\ObjectOrientedOAS\Objects\SecurityRequirement::create()->securityScheme('JWT'),
-                GoldSpecDigital\ObjectOrientedOAS\Objects\SecurityRequirement::create()->securityScheme(BearerTokenSecurityScheme::class),
+                BearerTokenSecurityScheme::class,
+                [
+                    BearerTokenSecurityScheme::class,
+                    AnotherBearerTokenSecurityScheme::class,
+                ],
+                AnotherBearerTokenSecurityScheme::class,
             ],
 
             // Non standard attributes used by code/doc generation tools can be added here

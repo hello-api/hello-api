@@ -9,11 +9,11 @@ use Vyuldashev\LaravelOpenApi\Factories\SecuritySchemeFactory;
 // Means: for which collections this security scheme is added to the components.
 // You have to apply it in configs/openapi.php too.
 #[Collection(name: ['private', 'public'])]
-class BearerTokenSecurityScheme extends SecuritySchemeFactory
+class AnotherBearerTokenSecurityScheme extends SecuritySchemeFactory
 {
     public function build(): SecurityScheme
     {
-        return SecurityScheme::create('BearerToken')
+        return SecurityScheme::create('SomethingElse')
             ->type(SecurityScheme::TYPE_HTTP)
             ->scheme('bearer');
     }
