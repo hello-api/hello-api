@@ -2,19 +2,19 @@
 
 namespace App\Containers\AppSection\Authentication\Notifications;
 
-use App\Containers\AppSection\User\Models\User;
+use App\Ship\Parents\Models\UserModel;
 use App\Ship\Parents\Notifications\Notification as ParentNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\URL;
 
-final class VerifyEmail extends ParentNotification implements ShouldQueue
+class VerifyEmail extends ParentNotification implements ShouldQueue
 {
     use Queueable;
 
     public function __construct(
-        private readonly string $verificationUrl,
+        private string $verification_url,
     ) {
     }
 
@@ -23,7 +23,7 @@ final class VerifyEmail extends ParentNotification implements ShouldQueue
         return ['mail'];
     }
 
-    public function toMail(User $notifiable): MailMessage
+    public function toMail(UserModel $notifiable): MailMessage
     {
         return (new MailMessage())
             ->subject('Verify Email Address')
@@ -32,16 +32,18 @@ final class VerifyEmail extends ParentNotification implements ShouldQueue
             ->line('If you did not create an account, no further action is required.');
     }
 
-    // TODO: This method might not have been tested properly. Please review it.
-    private function createUrl(User $notifiable): string
+    private function createUrl(UserModel $notifiable): string
     {
-        $user_id = config('apiato.hash-id') ? $notifiable->getHashedKey() : $notifiable->getKey();
+        $id = config('apiato.hash-id') ? $notifiable->getHashedKey() : $notifiable->getKey();
         $hash = sha1($notifiable->getEmailForVerification());
 
-        return $this->verificationUrl . '?url=' . URL::temporarySignedRoute(
+        return $this->verification_url . '?url=' . URL::temporarySignedRoute(
             'verification.verify',
             now()->addMinutes(config('appSection-authentication.email_verification_link_expiration_time_in_minute')),
-            compact('user_id', 'hash'),
+            [
+                'id' => $id,
+                'hash' => $hash,
+            ]
         );
     }
 }

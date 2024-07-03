@@ -19,7 +19,7 @@ use Vyuldashev\LaravelOpenApi\Attributes\Response;
 class LoginProxyForWebClientController extends ApiController
 {
     /**
-     * Login
+     * Login.
      */
     #[Operation(tags: ['user'], deprecated: true)]
     #[Response(factory: UserTransformerResponse::class)]

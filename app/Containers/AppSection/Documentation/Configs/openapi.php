@@ -4,19 +4,15 @@ use App\Containers\AppSection\User\UI\API\Documentation\SecuritySchemes\AnotherB
 use App\Containers\AppSection\User\UI\API\Documentation\SecuritySchemes\BearerTokenSecurityScheme;
 
 return [
-
     'collections' => [
-
         'private' => [
-
             'info' => [
                 'title' => config('app.name'),
-                'description' =>
-                    "<details><summary>General Info</summary>  \n".
+                'description' => "<details><summary>General Info</summary>  \n" .
                     // TODO: we have to check if the file exists first!
                     // this will throw "Failed to open stream: No such file or directory" if file does not exist.
-                    file_get_contents(app_path('Containers/AppSection/Documentation/UI/WEB/Views/swagger/header.md')).
-                    "</details>",
+                    file_get_contents(app_path('Containers/AppSection/Documentation/UI/WEB/Views/swagger/header.md')) .
+                    '</details>',
                 'version' => '1.0.0',
                 'contact' => [
                     'name' => 'Mohammad Alavi',
@@ -38,12 +34,10 @@ return [
             ],
 
             'tags' => [
-
                 // [
                 //    'name' => 'user',
                 //    'description' => 'Application users',
                 // ],
-
             ],
 
             'security' => [
@@ -72,17 +66,13 @@ return [
             // Register custom middlewares for different objects.
             'middlewares' => [
                 'paths' => [
-                    //
                 ],
                 'components' => [
-                    //
                 ],
             ],
-
         ],
 
         'public' => [
-
             'info' => [
                 'title' => config('app.name'),
                 'description' => 'a desc!',
@@ -99,12 +89,10 @@ return [
             ],
 
             'tags' => [
-
                 // [
                 //    'name' => 'user',
                 //    'description' => 'Application users',
                 // ],
-
             ],
 
             'security' => [
@@ -138,13 +126,10 @@ return [
             // Register custom middlewares for different objects.
             'middlewares' => [
                 'paths' => [
-                    //
                 ],
                 'components' => [
-                    //
                 ],
             ],
-
         ],
     ],
 
@@ -170,5 +155,4 @@ return [
             app_path('Containers/*/*/UI/API/Documentation/SecuritySchemes'),
         ],
     ],
-
 ];

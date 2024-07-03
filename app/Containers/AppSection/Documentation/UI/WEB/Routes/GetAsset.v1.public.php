@@ -21,4 +21,3 @@ Route::get('/assets/{container}/{type}/{file}', static function ($container, $ty
 
     return response()->json([], 404);
 });
-
