@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Swagger UI</title>
+    <title>PraiseCharts API - {{strtoupper(env('APP_ENV'))}}</title>
     <link rel="stylesheet" type="text/css" href="{{config('app.url').'/assets/documentation/css/swagger-ui.css'}}"/>
     <link rel="stylesheet" type="text/css" href="{{config('app.url').'/assets/documentation/css/index.css'}}"/>
     <link rel="icon" type="image/png" href="{{config('app.url').'/assets/documentation/png/favicon-32x32.png'}}"

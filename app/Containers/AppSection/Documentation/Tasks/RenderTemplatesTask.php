@@ -4,6 +4,9 @@ namespace App\Containers\AppSection\Documentation\Tasks;
 
 use Apiato\Core\Abstracts\Tasks\Task as AbstractTask;
 use App\Containers\AppSection\Documentation\Traits\DocsGeneratorTrait;
+use DateTime;
+use Exception;
+use RuntimeException;
 
 class RenderTemplatesTask extends AbstractTask
 {
@@ -34,8 +37,8 @@ class RenderTemplatesTask extends AbstractTask
     {
         $seconds = $minutes * 60;
 
-        $dtF = new \DateTime('@0');
-        $dtT = new \DateTime("@$seconds");
+        $dtF = new DateTime('@0');
+        $dtT = new DateTime("@$seconds");
 
         return $dtF->diff($dtT)->format('%a days, %h hours, %i minutes and %s seconds');
     }
@@ -43,15 +46,15 @@ class RenderTemplatesTask extends AbstractTask
     /**
      * Read the markdown header template and fill it with some real data from the .env file.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function run(): string
     {
         // read the template file
         try {
             $headerMarkdownContent = file_get_contents($this->templatePath);
-        } catch (\Exception) {
-            throw new \Exception('Could not read header template file', 500);
+        } catch (Exception) {
+            throw new Exception('Could not read header template file', 500);
         }
 
         $headerMarkdownContent = $this->replaceMarkdownContent($headerMarkdownContent, $this->replaceArray);
@@ -85,7 +88,7 @@ class RenderTemplatesTask extends AbstractTask
 
             $dir .= "/{$part}";
             if (!is_dir($dir) && !mkdir($dir)) {
-                throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
+                throw new RuntimeException(sprintf('Directory "%s" was not created', $dir));
             }
         }
         file_put_contents("{$dir}/{$file}", $contents);

@@ -86,14 +86,14 @@ api.domain.test/v1/endpoint?limit=100&page=2
         {
           "object": "Permission",
           "id": "wkxmdazl",
-          "name": "update-users",
+          "name": "update_users",
           "description": "Update a User.",
           "display_name": null
         },
         {
           "object": "Permission",
           "id": "qrvzpjzb",
-          "name": "delete-users",
+          "name": "delete_users",
           "description": "Delete a User.",
           "display_name": null
         }
@@ -337,7 +337,7 @@ api.domain.test/v1/endpoint?skipCache=true
 Пример вызова эндпойнта без авторизации:
 
 ```shell
-curl -X POST -H "Accept: application/json" -H "Content-Type: application/x-www-form-urlencoded; -F "email=admin@admin.com" -F "password=admin" -F "=" "http://api.domain.test/v2/register"
+curl -X POST -H "Accept: application/json" -H "Content-Type: application/x-www-form-urlencoded; -F "email=admin@praisecharts.com" -F "password=admin" -F "=" "http://api.domain.test/v2/register"
 ```
 
 Пример вызова эндпойнта с авторизацией (передача Bearer Token):

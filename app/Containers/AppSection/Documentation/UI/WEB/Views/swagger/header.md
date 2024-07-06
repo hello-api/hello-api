@@ -1,12 +1,12 @@
-## **Usage Overview**
+## Usage Overview
 
 Here are some information that should help you understand the basic usage of our RESTful API. 
 Including info about authenticating users, making requests, responses, potential errors, rate limiting, pagination, query parameters and more.
 
-## **Headers**
+## Headers
 
 Certain API calls require you to send data in a particular format as part of the API call. 
-By default, all API calls expect input in `JSON` format, however you need to inform the server that you are sending a JSON-formatted payload.
+By default, all API calls expect input in `JSON` format, however, you need to inform the server that you are sending a JSON-formatted payload.
 And to do that you must include the `Accept => application/json` HTTP header with every call.
 
 
@@ -16,41 +16,39 @@ And to do that you must include the `Accept => application/json` HTTP header wit
 | Content-Type  | `application/x-www-form-urlencoded` | MUST be sent when passing Data.                                              |
 | Authorization | `Bearer {Access-Token-Here}`        | MUST be sent whenever the endpoint requires (Authenticated User).            |
 
-## **Rate limiting**
+## Rate limiting
 
 All REST API requests are throttled to prevent abuse and ensure stability. 
 The exact number of calls that your application can make per day varies based on the type of request you are making.
 
-The rate limit window is `1` minutes per endpoint, with most individual calls allowing for `30` requests in each window.
+The rate limit window is `1` minutes per endpoint, with most individual calls allowing for `100` requests in each window.
 
-*In other words, each user is allowed to make `30` calls per endpoint every `1` minutes. (For each unique access token).*
+*In other words, each user is allowed to make `100` calls per endpoint every `1` minutes. (For each unique access token).*
 
-For how many hits you can preform on an endpoint, you can always check the header:
+For how many hits you can perform on an endpoint, you can always check the header:
 
 ```
 X-RateLimit-Limit → 30
 X-RateLimit-Remaining → 29
 ```
 
-## **Tokens**
+## Tokens
 
 The Access Token lives for `1 days, 0 hours, 0 minutes and 0 seconds`. (equivalent to `1440` minutes).
 While the Refresh Token lives for `30 days, 0 hours, 0 minutes and 0 seconds`. (equivalent to `43200` minutes).
 
 *You will need to re-authenticate the user when the token expires.*
 
-## **Pagination**
+## Pagination
 
 By default, all fetch requests return the first `10` items in the list. Check the **Query Parameters** for how to control the pagination.
 
-## **Limit:** 
+### Limit
 
-The `?limit=` parameter can be applied to define, how many record should be returned by the endpoint (see also `Pagination`!).
-
-**Usage:**
+The `?limit=` parameter can be applied to define, how many records should be returned by the endpoint (see also `Pagination`!).
 
 ```
-http://api.apiato.test/v1/endpoint?limit=100
+http://newapi.pc.localhost/v1/endpoint?limit=100
 ```
 
 The above example returns 100 resources. 
@@ -58,15 +56,14 @@ The above example returns 100 resources.
 The `limit` and `page` query parameters can be combined in order to get the next 100 resources:
 
 ```
-http://api.apiato.test/v1/endpoint?limit=100&page=2
+http://newapi.pc.localhost/v1/endpoint?limit=100&page=2
 ```
 
 You can skip the pagination limit to get all the data, by adding `?limit=0`, this will only work if 'skip pagination' is enabled on the server.
 
-## **Responses**
+## Responses
 
-Unless otherwise specified, all of API endpoints will return the information that you request in the JSON data format.
-
+Unless otherwise specified, all API endpoints will return the information that you request in the JSON data format.
 
 #### Standard Response Format
 
@@ -115,7 +112,7 @@ X-RateLimit-Limit → 100
 X-RateLimit-Remaining → 99
 ```
 
-## **Query Parameters**
+## Query Parameters
 
 Query parameters are optional, you can apply them to some endpoints whenever you need them.
 
@@ -123,22 +120,18 @@ Query parameters are optional, you can apply them to some endpoints whenever you
 
 The `?orderBy=` parameter can be applied to any **`GET`** HTTP request responsible for ordering the listing of the records by a field.
 
-**Usage:**
-
 ```
-http://api.apiato.test/v1/endpoint?orderBy=created_at
+http://newapi.pc.localhost/v1/endpoint?orderBy=created_at
 ```
 
 ### Sorting
 
 The `?sortedBy=` parameter is usually used with the `orderBy` parameter.
 
-By default the `orderBy` sorts the data in **ascending** order, if you want the data sorted in **descending** order, you can add `&sortedBy=desc`.
-
-**Usage:**
+By default, the `orderBy` sorts the data in **ascending** order, if you want the data sorted in **descending** order, you can add `&sortedBy=desc`.
 
 ```
-http://api.apiato.test/v1/endpoint?orderBy=name&sortedBy=desc
+http://newapi.pc.localhost/v1/endpoint?orderBy=name&sortedBy=desc
 ```
 
 Order By Accepts:
@@ -156,7 +149,7 @@ is enabled on a route then the `?search=` parameter can be applied to **`GET`** 
 #### Search any field:
 
 ```
-http://api.apiato.test/v1/endpoint?search=keyword here
+http://newapi.pc.localhost/v1/endpoint?search=keyword here
 ```
 
 > Space should be replaced with `%20` (search=keyword%20here).
@@ -164,23 +157,23 @@ http://api.apiato.test/v1/endpoint?search=keyword here
 #### Search any field for multiple keywords:
 
 ```
-http://api.apiato.test/v1/endpoint?search=first keyword;second keyword
+http://newapi.pc.localhost/v1/endpoint?search=first keyword;second keyword
 ```
 
 #### Search in a specific field:
 ```
-http://api.apiato.test/v1/endpoint?search=field:keyword here
+http://newapi.pc.localhost/v1/endpoint?search=field:keyword here
 ```
 
 #### Search in specific fields for multiple keywords: 
 ```
-http://api.apiato.test/v1/endpoint?search=field1:first field keyword;field2:second field keyword
+http://newapi.pc.localhost/v1/endpoint?search=field1:first field keyword;field2:second field keyword
 ```
 
 #### Define query condition:
 
 ```
-http://api.apiato.test/v1/endpoint?search=field:keyword&searchFields=name:like
+http://newapi.pc.localhost/v1/endpoint?search=field:keyword&searchFields=name:like
 ```
 
 Available Conditions: 
@@ -188,18 +181,17 @@ Available Conditions:
 - `like`: string like the field. (SQL query `%keyword%`).
 - `=`: string exact match.
 
-
 #### Define query condition for multiple fields:
 
 ```
-http://api.apiato.test/v1/endpoint?search=field1:first keyword;field2:second keyword&searchFields=field1:like;field2:=;
+http://newapi.pc.localhost/v1/endpoint?search=field1:first keyword;field2:second keyword&searchFields=field1:like;field2:=;
 ```
 
 #### Search Join:
 By default, search makes its queries using the OR comparison operator for each query parameter.
 
 ```
-http://api.apiato.test/v1/endpoint?search=age:17;email:john@gmail.com
+http://newapi.pc.localhost/v1/endpoint?search=age:17;email:john@gmail.com
 ```
 
 The above example will execute the following query:
@@ -210,19 +202,17 @@ SELECT * FROM users WHERE age = 17 OR email = 'john@gmail.com';
 In order for it to query using the AND, pass the `searchJoin` parameter as shown below:
 
 ```
-http://api.apiato.test/v1/endpoint?search=age:17;email:john@gmail.com&searchJoin=and
+http://newapi.pc.localhost/v1/endpoint?search=age:17;email:john@gmail.com&searchJoin=and
 ```
 
 ### Filtering
 
 The `?filter=` parameter can be applied to any HTTP request. And is used to control the response size, by defining what data you want back in the response.
 
-**Usage:**
-
-Return only ID and Status from the Model.
+Return only ID and Status from the Model:
 
 ```
-http://api.apiato.test/v1/endpoint?filter=id;status
+http://newapi.pc.localhost/v1/endpoint?filter=id;status
 ```
 
 Example Response, including only id and status:
@@ -262,15 +252,12 @@ Example Response, including only id and status:
 }
 ```
 
-
 ### Paginating
 
 The `?page=` parameter can be applied to any **`GET`** HTTP request responsible for listing records (mainly for Paginated data).
 
-**Usage:**
-
 ```
-http://api.apiato.test/v1/endpoint?page=200
+http://newapi.pc.localhost/v1/endpoint?page=200
 ```
 
 *The pagination object is always returned in the **meta** when pagination is available on the endpoint.*
@@ -285,7 +272,7 @@ http://api.apiato.test/v1/endpoint?page=200
       "current_page": 22,
       "total_pages": 1111,
       "links": {
-        "previous": "http://http://api.apiato.test/v1/endpoint?page=21"
+        "previous": "http://http://newapi.pc.localhost/v1/endpoint?page=21"
       }
     }
   }
@@ -301,45 +288,40 @@ The include allows getting the cars with their drivers `/cars?include=drivers`.
 However, for this parameter to work, the endpoint `/cars` should clearly define that it
 accepts `driver` as relationship (in the **Available Relationships** section).
 
-**Usage:**
-
 ```
-http://api.apiato.test/v1/endpoint?include=relationship
+http://newapi.pc.localhost/v1/endpoint?include=relationship
 ```
 
 Every response contains an `include` in its `meta`  as follow:
 
 ```
-   "meta":{
-      "include":[
-         "relationship-1",
-         "relationship-2",
-      ],
+"meta":{
+  "include":[
+     "relationship-1",
+     "relationship-2",
+  ],
 ```
-
 
 ### Caching
 
 Some endpoints store their response data in memory (caching) after querying them for the first time, to speed up the response time.
 The `?skipCache=` parameter can be used to force skip loading the response data from the server cache and instead get a fresh data from the database upon the request.
 
-**Usage:**
-
 ```
-http://api.apiato.test/v1/endpoint?skipCache=true
+http://newapi.pc.localhost/v1/endpoint?skipCache=true
 ```
 
-## **Requests**
+## Requests
 
 Calling unprotected endpoint example:
 
 ```shell
-curl -X POST -H "Accept: application/json" -H "Content-Type: application/x-www-form-urlencoded; -F "email=admin@admin.com" -F "password=admin" -F "=" "http://http://api.apiato.test/v2/register"
+curl -X POST -H "Accept: application/json" -H "Content-Type: application/x-www-form-urlencoded; -F "email=admin@praisecharts.com" -F "password=admin" -F "=" "http://http://newapi.pc.localhost/v2/register"
 ```
 
 Calling protected endpoint (passing Bearer Token) example:
 
 ```shell
-curl -X GET -H "Accept: application/json" -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..." -H "http://http://api.apiato.test/v1/users"
+curl -X GET -H "Accept: application/json" -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..." -H "http://http://newapi.pc.localhost/v1/users"
 ```
 

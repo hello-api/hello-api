@@ -1,47 +1,39 @@
 <?php
 
-use App\Containers\AppSection\User\UI\API\Documentation\SecuritySchemes\AnotherBearerTokenSecurityScheme;
-use App\Containers\AppSection\User\UI\API\Documentation\SecuritySchemes\BearerTokenSecurityScheme;
+use App\Containers\AppSection\Authentication\UI\API\Documentation\SecuritySchemes\BearerTokenSecurityScheme;
+use App\Containers\AppSection\Authentication\UI\API\Documentation\SecuritySchemes\OAuth2PasswordClientCredentialsSecurityScheme;
+use App\Containers\AppSection\Authentication\UI\API\Documentation\Tags\AuthenticationTag;
+use App\Containers\AppSection\User\UI\API\Documentation\Tags\UserTag;
+use App\Ship\Documentation\Servers\MainServer;
+
+$headerPath = app_path('Containers/AppSection/Documentation/UI/WEB/Views/swagger/header.md');
+$headerContent = '';
+if (file_exists($headerPath)) {
+    $headerContent = file_get_contents($headerPath);
+}
 
 return [
     'collections' => [
         'private' => [
             'info' => [
                 'title' => config('app.name'),
-                'description' => "<details><summary>General Info</summary>  \n" .
-                    // TODO: we have to check if the file exists first!
-                    // this will throw "Failed to open stream: No such file or directory" if file does not exist.
-                    file_get_contents(app_path('Containers/AppSection/Documentation/UI/WEB/Views/swagger/header.md')) .
-                    '</details>',
+                'description' => "<details><summary>General Info</summary>  \n" . $headerContent . '</details>',
                 'version' => '1.0.0',
-                'contact' => [
-                    'name' => 'Mohammad Alavi',
-                    'email' => 'gandalf.the@gray',
-                    'url' => 'https://www.google.com',
-                ],
-                'license' => [
-                    'name' => 'MIT',
-                    'url' => 'https://opensource.org/licenses/MIT',
-                ],
             ],
 
             'servers' => [
-                [
-                    'url' => env('API_URL'),
-                    'description' => null,
-                    'variables' => [],
-                ],
+                MainServer::class,
             ],
 
             'tags' => [
-                // [
-                //    'name' => 'user',
-                //    'description' => 'Application users',
-                // ],
+                AuthenticationTag::class,
+                UserTag::class,
             ],
 
+            // Registering all possible (available) security schemes here.
             'security' => [
-                [BearerTokenSecurityScheme::class],
+                BearerTokenSecurityScheme::class,
+                OAuth2PasswordClientCredentialsSecurityScheme::class,
             ],
 
             // Non standard attributes used by code/doc generation tools can be added here
@@ -75,33 +67,20 @@ return [
         'public' => [
             'info' => [
                 'title' => config('app.name'),
-                'description' => 'a desc!',
-                'version' => '2.0.0',
-                'contact' => ['name' => 'test'],
+                'description' => "<details><summary>General Info</summary>  \n" . $headerContent . '</details>',
+                'version' => '1.0.0',
             ],
 
             'servers' => [
-                [
-                    'url' => env('API_URL'),
-                    'description' => null,
-                    'variables' => [],
-                ],
+                MainServer::class,
             ],
 
-            'tags' => [
-                // [
-                //    'name' => 'user',
-                //    'description' => 'Application users',
-                // ],
-            ],
+            'tags' => [],
 
+            // Registering all possible (available) security schemes here.
             'security' => [
                 BearerTokenSecurityScheme::class,
-                [
-                    BearerTokenSecurityScheme::class,
-                    AnotherBearerTokenSecurityScheme::class,
-                ],
-                AnotherBearerTokenSecurityScheme::class,
+                OAuth2PasswordClientCredentialsSecurityScheme::class,
             ],
 
             // Non standard attributes used by code/doc generation tools can be added here

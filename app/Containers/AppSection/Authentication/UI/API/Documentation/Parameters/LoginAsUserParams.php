@@ -4,9 +4,9 @@ namespace App\Containers\AppSection\Authentication\UI\API\Documentation\Paramete
 
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Parameter;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
-use Vyuldashev\LaravelOpenApi\Factories\ParametersFactory;
+use MohammadAlavi\LaravelOpenApi\Factories\ParametersFactory;
 
-class LoginProxyForWebClient extends ParametersFactory
+class LoginAsUserParams extends ParametersFactory
 {
     /**
      * @return Parameter[]
@@ -14,12 +14,9 @@ class LoginProxyForWebClient extends ParametersFactory
     public function build(): array
     {
         return [
-            Parameter::query()
-                ->name('email'),
-            Parameter::query()
-                ->name('password')
-                ->description('Parameter description')
-                ->required(false)
+            Parameter::path()
+                ->name('id')
+                ->required()
                 ->schema(Schema::string()),
         ];
     }

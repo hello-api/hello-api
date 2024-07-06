@@ -29,6 +29,9 @@ return [
     |
     */
 
+    // TODO: change the 'type' to 'collection' in the next major release
+    // here we tell the generator to generate the documentation for the `public` collection or any other collection you add
+    // this correlates to controller or action attributes
     'types' => [
         'public' => [
             'url' => env('PUBLIC_DOCS_URL', 'docs'),

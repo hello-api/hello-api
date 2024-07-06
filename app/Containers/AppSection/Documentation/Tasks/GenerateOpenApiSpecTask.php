@@ -5,7 +5,7 @@ namespace App\Containers\AppSection\Documentation\Tasks;
 use Apiato\Core\Abstracts\Tasks\Task as AbstractTask;
 use App\Containers\AppSection\Documentation\Traits\DocsGeneratorTrait;
 use App\Containers\AppSection\Documentation\UI\CLI\Commands\GenerateOpenApiSpecCommand;
-use Vyuldashev\LaravelOpenApi\Generator;
+use MohammadAlavi\LaravelOpenApi\Generator;
 
 class GenerateOpenApiSpecTask extends AbstractTask
 {
@@ -60,7 +60,7 @@ class GenerateOpenApiSpecTask extends AbstractTask
         //            return;
         //        }
 
-        $json = $this->generator->generate($type)->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $json = $this->generator->generate($type)->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         //        $json = $this->generator->generate($console->argument('collection'))->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         $path = app_path("Containers/AppSection/Documentation/UI/WEB/Views/swagger/openapi.{$type}.json");
         file_put_contents($path, $json);
