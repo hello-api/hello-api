@@ -6,7 +6,7 @@ use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 use MohammadAlavi\LaravelOpenApi\Factories\ResponseFactory;
 
-class IndexUserPurchaseHistoryResponse extends ResponseFactory
+class ListUsersResponse extends ResponseFactory
 {
     public function build(): Response
     {

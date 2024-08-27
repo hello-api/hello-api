@@ -3,17 +3,17 @@
 namespace App\Containers\AppSection\Authentication\UI\API\Controllers;
 
 use App\Containers\AppSection\Authentication\Actions\ApiLoginProxyForWebClientAction;
-use App\Containers\AppSection\Authentication\UI\API\Documentation\Parameters\LoginProxyForWebClient;
+use App\Containers\AppSection\Authentication\UI\API\Documentation\Parameters\LoginProxyForWebClientParams;
+use App\Containers\AppSection\Authentication\UI\API\Documentation\Responses\LoginProxyForWebClientResponse;
 use App\Containers\AppSection\Authentication\UI\API\Requests\LoginProxyPasswordGrantRequest;
 use App\Containers\AppSection\Authentication\UI\API\Transformers\TokenTransformer;
-use App\Containers\AppSection\User\UI\API\Documentation\Responses\UserTransformerResponse;
 use App\Ship\Parents\Controllers\ApiController;
 use Illuminate\Http\JsonResponse;
-use Vyuldashev\LaravelOpenApi\Attributes\Collection;
-use Vyuldashev\LaravelOpenApi\Attributes\Operation;
-use Vyuldashev\LaravelOpenApi\Attributes\Parameters;
-use Vyuldashev\LaravelOpenApi\Attributes\PathItem;
-use Vyuldashev\LaravelOpenApi\Attributes\Response;
+use MohammadAlavi\LaravelOpenApi\Attributes\Collection;
+use MohammadAlavi\LaravelOpenApi\Attributes\Operation;
+use MohammadAlavi\LaravelOpenApi\Attributes\Parameters;
+use MohammadAlavi\LaravelOpenApi\Attributes\PathItem;
+use MohammadAlavi\LaravelOpenApi\Attributes\Response;
 
 #[PathItem]
 class LoginProxyForWebClientController extends ApiController
@@ -22,9 +22,9 @@ class LoginProxyForWebClientController extends ApiController
      * Login.
      */
     #[Operation(tags: ['user'], deprecated: true)]
-    #[Response(factory: UserTransformerResponse::class)]
+    #[Response(factory: LoginProxyForWebClientResponse::class)]
     #[Collection(['private', 'public'])]
-    #[Parameters(factory: LoginProxyForWebClient::class)]
+    #[Parameters(factory: LoginProxyForWebClientParams::class)]
     public function __invoke(LoginProxyPasswordGrantRequest $request, ApiLoginProxyForWebClientAction $action): JsonResponse
     {
         $result = $action->run($request);

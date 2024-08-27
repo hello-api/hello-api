@@ -21,9 +21,9 @@ And to do that you must include the `Accept => application/json` HTTP header wit
 All REST API requests are throttled to prevent abuse and ensure stability. 
 The exact number of calls that your application can make per day varies based on the type of request you are making.
 
-The rate limit window is `1` minutes per endpoint, with most individual calls allowing for `100` requests in each window.
+The rate limit window is `1` minutes per endpoint, with most individual calls allowing for `30` requests in each window.
 
-*In other words, each user is allowed to make `100` calls per endpoint every `1` minutes. (For each unique access token).*
+*In other words, each user is allowed to make `30` calls per endpoint every `1` minutes. (For each unique access token).*
 
 For how many hits you can perform on an endpoint, you can always check the header:
 
@@ -48,7 +48,7 @@ By default, all fetch requests return the first `10` items in the list. Check th
 The `?limit=` parameter can be applied to define, how many records should be returned by the endpoint (see also `Pagination`!).
 
 ```
-http://newapi.pc.localhost/v1/endpoint?limit=100
+http://api.localhost/v1/endpoint?limit=100
 ```
 
 The above example returns 100 resources. 
@@ -56,7 +56,7 @@ The above example returns 100 resources.
 The `limit` and `page` query parameters can be combined in order to get the next 100 resources:
 
 ```
-http://newapi.pc.localhost/v1/endpoint?limit=100&page=2
+http://api.localhost/v1/endpoint?limit=100&page=2
 ```
 
 You can skip the pagination limit to get all the data, by adding `?limit=0`, this will only work if 'skip pagination' is enabled on the server.
@@ -80,14 +80,14 @@ Unless otherwise specified, all API endpoints will return the information that y
         {
           "object": "Permission",
           "id": "wkxmdazl",
-          "name": "update-users",
+          "name": "update_users",
           "description": "Update a User.",
           "display_name": null
         },
         {
           "object": "Permission",
           "id": "qrvzpjzb",
-          "name": "delete-users",
+          "name": "delete_users",
           "description": "Delete a User.",
           "display_name": null
         }
@@ -121,7 +121,7 @@ Query parameters are optional, you can apply them to some endpoints whenever you
 The `?orderBy=` parameter can be applied to any **`GET`** HTTP request responsible for ordering the listing of the records by a field.
 
 ```
-http://newapi.pc.localhost/v1/endpoint?orderBy=created_at
+http://api.localhost/v1/endpoint?orderBy=created_at
 ```
 
 ### Sorting
@@ -131,7 +131,7 @@ The `?sortedBy=` parameter is usually used with the `orderBy` parameter.
 By default, the `orderBy` sorts the data in **ascending** order, if you want the data sorted in **descending** order, you can add `&sortedBy=desc`.
 
 ```
-http://newapi.pc.localhost/v1/endpoint?orderBy=name&sortedBy=desc
+http://api.localhost/v1/endpoint?orderBy=name&sortedBy=desc
 ```
 
 Order By Accepts:
@@ -149,7 +149,7 @@ is enabled on a route then the `?search=` parameter can be applied to **`GET`** 
 #### Search any field:
 
 ```
-http://newapi.pc.localhost/v1/endpoint?search=keyword here
+http://api.localhost/v1/endpoint?search=keyword here
 ```
 
 > Space should be replaced with `%20` (search=keyword%20here).
@@ -157,23 +157,23 @@ http://newapi.pc.localhost/v1/endpoint?search=keyword here
 #### Search any field for multiple keywords:
 
 ```
-http://newapi.pc.localhost/v1/endpoint?search=first keyword;second keyword
+http://api.localhost/v1/endpoint?search=first keyword;second keyword
 ```
 
 #### Search in a specific field:
 ```
-http://newapi.pc.localhost/v1/endpoint?search=field:keyword here
+http://api.localhost/v1/endpoint?search=field:keyword here
 ```
 
 #### Search in specific fields for multiple keywords: 
 ```
-http://newapi.pc.localhost/v1/endpoint?search=field1:first field keyword;field2:second field keyword
+http://api.localhost/v1/endpoint?search=field1:first field keyword;field2:second field keyword
 ```
 
 #### Define query condition:
 
 ```
-http://newapi.pc.localhost/v1/endpoint?search=field:keyword&searchFields=name:like
+http://api.localhost/v1/endpoint?search=field:keyword&searchFields=name:like
 ```
 
 Available Conditions: 
@@ -184,14 +184,14 @@ Available Conditions:
 #### Define query condition for multiple fields:
 
 ```
-http://newapi.pc.localhost/v1/endpoint?search=field1:first keyword;field2:second keyword&searchFields=field1:like;field2:=;
+http://api.localhost/v1/endpoint?search=field1:first keyword;field2:second keyword&searchFields=field1:like;field2:=;
 ```
 
 #### Search Join:
 By default, search makes its queries using the OR comparison operator for each query parameter.
 
 ```
-http://newapi.pc.localhost/v1/endpoint?search=age:17;email:john@gmail.com
+http://api.localhost/v1/endpoint?search=age:17;email:john@gmail.com
 ```
 
 The above example will execute the following query:
@@ -202,7 +202,7 @@ SELECT * FROM users WHERE age = 17 OR email = 'john@gmail.com';
 In order for it to query using the AND, pass the `searchJoin` parameter as shown below:
 
 ```
-http://newapi.pc.localhost/v1/endpoint?search=age:17;email:john@gmail.com&searchJoin=and
+http://api.localhost/v1/endpoint?search=age:17;email:john@gmail.com&searchJoin=and
 ```
 
 ### Filtering
@@ -212,7 +212,7 @@ The `?filter=` parameter can be applied to any HTTP request. And is used to cont
 Return only ID and Status from the Model:
 
 ```
-http://newapi.pc.localhost/v1/endpoint?filter=id;status
+http://api.localhost/v1/endpoint?filter=id;status
 ```
 
 Example Response, including only id and status:
@@ -257,7 +257,7 @@ Example Response, including only id and status:
 The `?page=` parameter can be applied to any **`GET`** HTTP request responsible for listing records (mainly for Paginated data).
 
 ```
-http://newapi.pc.localhost/v1/endpoint?page=200
+http://api.localhost/v1/endpoint?page=200
 ```
 
 *The pagination object is always returned in the **meta** when pagination is available on the endpoint.*
@@ -272,7 +272,7 @@ http://newapi.pc.localhost/v1/endpoint?page=200
       "current_page": 22,
       "total_pages": 1111,
       "links": {
-        "previous": "http://http://newapi.pc.localhost/v1/endpoint?page=21"
+        "previous": "http://http://api.localhost/v1/endpoint?page=21"
       }
     }
   }
@@ -289,7 +289,7 @@ However, for this parameter to work, the endpoint `/cars` should clearly define 
 accepts `driver` as relationship (in the **Available Relationships** section).
 
 ```
-http://newapi.pc.localhost/v1/endpoint?include=relationship
+http://api.localhost/v1/endpoint?include=relationship
 ```
 
 Every response contains an `include` in its `meta`  as follow:
@@ -308,7 +308,7 @@ Some endpoints store their response data in memory (caching) after querying them
 The `?skipCache=` parameter can be used to force skip loading the response data from the server cache and instead get a fresh data from the database upon the request.
 
 ```
-http://newapi.pc.localhost/v1/endpoint?skipCache=true
+http://api.localhost/v1/endpoint?skipCache=true
 ```
 
 ## Requests
@@ -316,12 +316,12 @@ http://newapi.pc.localhost/v1/endpoint?skipCache=true
 Calling unprotected endpoint example:
 
 ```shell
-curl -X POST -H "Accept: application/json" -H "Content-Type: application/x-www-form-urlencoded; -F "email=admin@praisecharts.com" -F "password=admin" -F "=" "http://http://newapi.pc.localhost/v2/register"
+curl -X POST -H "Accept: application/json" -H "Content-Type: application/x-www-form-urlencoded; -F "email=admin@praisecharts.com" -F "password=admin" -F "=" "http://http://api.localhost/v2/register"
 ```
 
 Calling protected endpoint (passing Bearer Token) example:
 
 ```shell
-curl -X GET -H "Accept: application/json" -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..." -H "http://http://newapi.pc.localhost/v1/users"
+curl -X GET -H "Accept: application/json" -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..." -H "http://http://api.localhost/v1/users"
 ```
 

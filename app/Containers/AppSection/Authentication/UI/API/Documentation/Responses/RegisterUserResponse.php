@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Containers\AppSection\User\UI\API\Documentation\Responses;
+namespace App\Containers\AppSection\Authentication\UI\API\Documentation\Responses;
 
 use GoldSpecDigital\ObjectOrientedOAS\Objects\MediaType;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Response;
 use MohammadAlavi\LaravelOpenApi\Factories\ResponseFactory;
 
-class GetAllUsersResponse extends ResponseFactory
+class RegisterUserResponse extends ResponseFactory
 {
     public function build(): Response
     {
