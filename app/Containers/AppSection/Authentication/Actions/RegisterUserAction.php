@@ -8,6 +8,7 @@ use App\Containers\AppSection\Authentication\Tasks\SendVerificationEmailTask;
 use App\Containers\AppSection\Authentication\UI\API\Requests\RegisterUserRequest;
 use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Tasks\CreateUserTask;
+use App\Containers\AppSection\User\Values\Email;
 use App\Ship\Exceptions\CreateResourceFailedException;
 use App\Ship\Parents\Actions\Action as ParentAction;
 
@@ -32,6 +33,10 @@ class RegisterUserAction extends ParentAction
             'gender',
             'birth',
         ]);
+
+        $email = (new Email($sanitizedData['email']));
+        $email->validate();
+        $sanitizedData['email'] = $email->value;
 
         $user = $this->createUserTask->run($sanitizedData);
 

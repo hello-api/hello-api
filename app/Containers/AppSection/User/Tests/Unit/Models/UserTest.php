@@ -7,6 +7,7 @@ use App\Containers\AppSection\User\Data\Factories\UserFactory;
 use App\Containers\AppSection\User\Enums\Gender;
 use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Tests\UnitTestCase;
+use App\Containers\AppSection\User\Values\Email;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -43,6 +44,7 @@ final class UserTest extends UnitTestCase
         $user = UserFactory::new()->createOne();
         $casts = [
             'id' => 'int',
+            'email' => Email::class,
             'email_verified_at' => 'immutable_datetime',
             'password' => 'hashed',
             'gender' => Gender::class,
@@ -116,7 +118,7 @@ final class UserTest extends UnitTestCase
         $expectedSet = 'GanDalf@thE.Gray';
         $user = UserFactory::new()->createOne(['email' => $original]);
 
-        $this->assertSame($expectedGet, $user->email);
+        $this->assertSame($expectedGet, $user->email->value);
         $this->assertSame($expectedSet, DB::query()->from('users')->find($user->id)->email);
     }
 }

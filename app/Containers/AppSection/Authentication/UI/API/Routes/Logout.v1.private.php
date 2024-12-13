@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @apiGroup           OAuth2
  *

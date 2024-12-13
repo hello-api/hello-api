@@ -47,7 +47,7 @@ final class UpdateUserTest extends ApiTestCase
                 'data',
                 fn (AssertableJson $json): AssertableJson => $json
                     ->where('object', 'User')
-                    ->where('email', $this->testingUser->email)
+                    ->where('email', $this->testingUser->email->value)
                     ->where('name', $data['name'])
                     ->where('gender', $data['gender'])
                     ->where('birth', static fn ($birth) => CarbonImmutable::parse($data['birth'])->isSameDay($birth))

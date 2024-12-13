@@ -5,6 +5,7 @@ namespace App\Containers\AppSection\Authentication\Tests\Unit\UI\API\Requests;
 use App\Containers\AppSection\Authentication\Tests\UnitTestCase;
 use App\Containers\AppSection\Authentication\UI\API\Requests\RegisterUserRequest;
 use App\Containers\AppSection\User\Enums\Gender;
+use App\Containers\AppSection\User\Values\Email;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -37,7 +38,10 @@ final class RegisterUserRequestTest extends UnitTestCase
     public function testValidationRules(): void
     {
         $this->assertEquals([
-            'email' => 'required|email|unique:users,email',
+            'email' => [
+                'required',
+                ...Email::rules(),
+            ],
             'password' => [
                 'required',
                 Password::default(),

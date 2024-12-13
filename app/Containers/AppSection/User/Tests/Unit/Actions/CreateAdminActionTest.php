@@ -21,7 +21,7 @@ final class CreateAdminActionTest extends UnitTestCase
 
         $admin = app(CreateAdminAction::class)->run($data);
 
-        $this->assertSame($data['email'], $admin->email);
+        $this->assertSame($data['email'], $admin->email->value);
         foreach (array_keys(config('auth.guards')) as $guardName) {
             $this->assertTrue($admin->hasRole(config('appSection-authorization.admin_role'), $guardName));
         }

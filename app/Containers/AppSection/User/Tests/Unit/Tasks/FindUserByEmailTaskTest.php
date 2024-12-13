@@ -19,7 +19,7 @@ final class FindUserByEmailTaskTest extends UnitTestCase
 
         $foundUser = app(FindUserByEmailTask::class)->run($user->email);
 
-        $this->assertSame($user->email, $foundUser->email);
+        $this->assertTrue($user->email->equals($foundUser->email));
     }
 
     public function testFindUserWithInvalidEmail(): void

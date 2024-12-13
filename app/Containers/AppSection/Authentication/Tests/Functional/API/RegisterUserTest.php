@@ -7,8 +7,10 @@ use App\Containers\AppSection\Authentication\Notifications\Welcome;
 use App\Containers\AppSection\Authentication\Tests\Functional\ApiTestCase;
 use App\Containers\AppSection\User\Models\User;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
 #[Group('authentication')]
@@ -23,6 +25,17 @@ final class RegisterUserTest extends ApiTestCase
         'permissions' => null,
         'roles' => null,
     ];
+
+    public static function emailDataProvider(): array
+    {
+        $email = 'ganDalf@thE.GreY';
+
+        return [
+            'sameCasing' => compact('email'),
+            'differentCasingLower' => ['email' => Str::lower($email)],
+            'differentCasingUpper' => ['email' => Str::upper($email)],
+        ];
+    }
 
     public function testGivenEmailVerificationEnabledRegisterNewUserWithCredentials(): void
     {
@@ -187,5 +200,25 @@ final class RegisterUserTest extends ApiTestCase
         $response->assertOk();
         Notification::assertSentTo($registeredUser, Welcome::class);
         Notification::assertNotSentTo($registeredUser, VerifyEmail::class);
+    }
+
+    #[DataProvider('emailDataProvider')]
+    public function testCannotRegisterWithDuplicateEmail($email): void
+    {
+        $this->getTestingUser(['email' => 'ganDalf@thE.GreY']);
+        $data = [
+            'email' => $email,
+            'password' => 's3cr3tPa$$',
+            'verification_url' => config('appSection-authentication.allowed-verify-email-urls')[0],
+        ];
+
+        $response = $this->makeCall($data);
+
+        $response->assertUnprocessable();
+        $response->assertJson(
+            static fn (AssertableJson $json): AssertableJson => $json->has('errors')
+                ->where('errors.email.0', 'The email has already been taken.')
+                ->etc(),
+        );
     }
 }
