@@ -45,7 +45,7 @@ final class CreateRoleTest extends ApiTestCase
         $response->assertJson(
             static fn (AssertableJson $json): AssertableJson => $json->has('message')
                     ->has('errors')
-                    ->where('errors.name.0', 'String should not contain space.'),
+                    ->where('errors.name.0', 'The name field must only contain letters.'),
         );
     }
 

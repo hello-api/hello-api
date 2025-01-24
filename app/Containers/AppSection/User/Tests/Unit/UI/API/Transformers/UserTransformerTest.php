@@ -2,9 +2,9 @@
 
 namespace App\Containers\AppSection\User\Tests\Unit\UI\API\Transformers;
 
-use App\Containers\AppSection\Authorization\Data\Factories\PermissionFactory;
-use App\Containers\AppSection\Authorization\Data\Factories\RoleFactory;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\Authorization\Models\Permission;
+use App\Containers\AppSection\Authorization\Models\Role;
+use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Tests\UnitTestCase;
 use App\Containers\AppSection\User\UI\API\Transformers\UserTransformer;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -16,7 +16,7 @@ final class UserTransformerTest extends UnitTestCase
 
     public function testCanTransformSingleObject(): void
     {
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
         $expected = [
             'object' => $user->getResourceKey(),
             'id' => $user->getHashedKey(),
@@ -47,8 +47,8 @@ final class UserTransformerTest extends UnitTestCase
 
     public function testIncludeRoles(): void
     {
-        $user = UserFactory::new()->createOne();
-        $roles = RoleFactory::new()->count(3)->create();
+        $user = User::factory()->createOne();
+        $roles = Role::factory()->count(3)->create();
         $user->roles()->attach($roles);
 
         $resource = $this->transformer->includeRoles($user);
@@ -58,8 +58,8 @@ final class UserTransformerTest extends UnitTestCase
 
     public function testIncludePermissions(): void
     {
-        $user = UserFactory::new()->createOne();
-        $permissions = PermissionFactory::new()->count(3)->create();
+        $user = User::factory()->createOne();
+        $permissions = Permission::factory()->count(3)->create();
         $user->permissions()->attach($permissions);
 
         $resource = $this->transformer->includePermissions($user);

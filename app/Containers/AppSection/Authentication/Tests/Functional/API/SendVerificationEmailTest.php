@@ -4,7 +4,7 @@ namespace App\Containers\AppSection\Authentication\Tests\Functional\API;
 
 use App\Containers\AppSection\Authentication\Notifications\VerifyEmail;
 use App\Containers\AppSection\Authentication\Tests\Functional\ApiTestCase;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
@@ -22,7 +22,7 @@ final class SendVerificationEmailTest extends ApiTestCase
     public function testGivenEmailVerificationEnabledSendVerificationEmail(): void
     {
         Notification::fake();
-        $this->testingUser = UserFactory::new()->unverified()->createOne();
+        $this->testingUser = User::factory()->unverified()->createOne();
         config()->set('appSection-authentication.require_email_verification', true);
 
         $data = [

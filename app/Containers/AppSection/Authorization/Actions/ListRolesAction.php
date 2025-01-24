@@ -2,7 +2,6 @@
 
 namespace App\Containers\AppSection\Authorization\Actions;
 
-use Apiato\Core\Exceptions\CoreInternalErrorException;
 use App\Containers\AppSection\Authorization\Data\Collections\RoleCollection;
 use App\Containers\AppSection\Authorization\Data\Repositories\RoleRepository;
 use App\Ship\Parents\Actions\Action as ParentAction;
@@ -18,7 +17,6 @@ class ListRolesAction extends ParentAction
     }
 
     /**
-     * @throws CoreInternalErrorException
      * @throws RepositoryException
      * @throws BindingResolutionException
      */

@@ -1,44 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd" bootstrap="vendor/autoload.php"
-         colors="true">
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+>
     <testsuites>
         <testsuite name="Unit">
-            <directory>./app/Containers/*/*/Tests/Unit</directory>
+            <directory>app/Containers/*/*/Tests/Unit</directory>
+            <directory>tests/Unit</directory>
         </testsuite>
         <testsuite name="Functional">
-            <directory>./app/Containers/*/*/Tests/Functional</directory>
+            <directory>app/Containers/*/*/Tests/Functional</directory>
         </testsuite>
         <testsuite name="Ship-Unit">
-            <directory>./app/Ship/Tests/Unit</directory>
+            <directory>app/Ship/Tests/Unit</directory>
         </testsuite>
     </testsuites>
     <source>
         <include>
-            <directory>./app</directory>
+            <directory>app</directory>
         </include>
         <exclude>
-            <directory>./app/Containers/Vendor</directory>
+            <directory>app/Containers/Vendor</directory>
             <!-- NOTE: Exclude the following directories because they fail when directly included with code-coverage-->
-            <directory>./app/Containers/*/*/UI/*/Routes</directory>
-            <directory>./app/Containers/*/*/Configs</directory>
-            <directory>./app/Containers/*/*/Data/Migrations</directory>
-            <directory>./app/Ship/Configs</directory>
-            <directory>./app/Ship/Migrations</directory>
+            <directory>app/Containers/*/*/UI/*/Routes</directory>
+            <directory>app/Containers/*/*/Configs</directory>
+            <directory>app/Containers/*/*/Data/Migrations</directory>
+            <directory>app/Ship/Configs</directory>
+            <directory>app/Ship/Migrations</directory>
             <!-- NOTE: Exclude tests from coverage-->
-            <directory>./app/Containers/*/*/Tests</directory>
-            <directory>./app/Ship/Tests</directory>
+            <directory>app/Containers/*/*/Tests</directory>
+            <directory>app/Ship/Tests</directory>
             <!-- NOTE: Exclude blade files from coverage-->
-            <directory suffix=".blade.php">./app</directory>
+            <directory suffix=".blade.php">app</directory>
         </exclude>
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>
+        <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
-        <env name="CACHE_DRIVER" value="array"/>
+        <env name="CACHE_STORE" value="array"/>
         <!-- <env name="DB_CONNECTION" value="sqlite"/> -->
         <!-- <env name="DB_DATABASE" value=":memory:"/> -->
         <env name="MAIL_MAILER" value="array"/>
+        <env name="PULSE_ENABLED" value="false"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>

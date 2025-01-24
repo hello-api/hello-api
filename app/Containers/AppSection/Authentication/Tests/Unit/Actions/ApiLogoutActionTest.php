@@ -13,6 +13,13 @@ use PHPUnit\Framework\Attributes\UsesClass;
 #[CoversClass(ApiLogoutAction::class)]
 final class ApiLogoutActionTest extends UnitTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->setupPasswordGrantClient();
+    }
+
     public function testApiLogoutAction(): void
     {
         $data = [

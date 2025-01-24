@@ -2,9 +2,9 @@
 
 namespace App\Containers\AppSection\Authentication\Actions;
 
-use Apiato\Core\Exceptions\IncorrectIdException;
+use Apiato\Exceptions\IncorrectId;
 use App\Containers\AppSection\Authentication\Classes\LoginFieldParser;
-use App\Containers\AppSection\Authentication\Exceptions\LoginFailedException;
+use App\Containers\AppSection\Authentication\Exceptions\LoginFailed;
 use App\Containers\AppSection\Authentication\Tasks\CallOAuthServerTask;
 use App\Containers\AppSection\Authentication\Tasks\MakeRefreshTokenCookieTask;
 use App\Containers\AppSection\Authentication\UI\API\Requests\LoginProxyPasswordGrantRequest;
@@ -20,8 +20,9 @@ class ApiLoginProxyForWebClientAction extends ParentAction
     }
 
     /**
-     * @throws LoginFailedException
-     * @throws IncorrectIdException
+     * @throws LoginFailed
+     * @throws IncorrectId
+     * @throws \Exception
      */
     public function run(LoginProxyPasswordGrantRequest $request): AuthResult
     {
@@ -36,6 +37,7 @@ class ApiLoginProxyForWebClientAction extends ParentAction
 
         $loginFields = LoginFieldParser::extractAll($sanitizedData);
 
+        $exception = null;
         foreach ($loginFields as $loginField) {
             $sanitizedData['username'] = $loginField->value;
 
@@ -44,11 +46,12 @@ class ApiLoginProxyForWebClientAction extends ParentAction
                 $refreshTokenCookie = $this->makeRefreshTokenCookieTask->run($token->refreshToken);
 
                 return new AuthResult($token, $refreshTokenCookie);
-            } catch (LoginFailedException) {
+            } catch (LoginFailed $e) {
+                $exception = $e;
                 // try the next login field
             }
         }
 
-        throw new LoginFailedException();
+        throw $exception;
     }
 }

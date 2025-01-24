@@ -2,8 +2,8 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Unit\UI\API\Transformers;
 
-use App\Containers\AppSection\Authorization\Data\Factories\PermissionFactory;
-use App\Containers\AppSection\Authorization\Data\Factories\RoleFactory;
+use App\Containers\AppSection\Authorization\Models\Permission;
+use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\AppSection\Authorization\Tests\UnitTestCase;
 use App\Containers\AppSection\Authorization\UI\API\Transformers\RoleAdminTransformer;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -15,7 +15,7 @@ final class RoleAdminTransformerTest extends UnitTestCase
 
     public function testCanTransformSingleObject(): void
     {
-        $role = RoleFactory::new()->createOne();
+        $role = Role::factory()->createOne();
         $expected = [
             'object' => $role->getResourceKey(),
             'id' => $role->getHashedKey(),
@@ -44,8 +44,8 @@ final class RoleAdminTransformerTest extends UnitTestCase
 
     public function testIncludePermissions(): void
     {
-        $role = RoleFactory::new()->createOne();
-        $permissions = PermissionFactory::new()->count(3)->create();
+        $role = Role::factory()->createOne();
+        $permissions = Permission::factory()->count(3)->create();
         $role->permissions()->attach($permissions);
 
         $resource = $this->transformer->includePermissions($role);

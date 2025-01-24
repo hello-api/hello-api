@@ -125,20 +125,20 @@ return [
         ],
 
         /*
-        |--------------------------------------------------------------------------
-        | Methods Allowed
-        |--------------------------------------------------------------------------
-        |
-        | methods cacheable : all, paginate, find, findByField, findWhere, getByCriteria
-        |
-        | Ex:
-        |
-        | 'only'  =>['all','paginate'],
-        |
-        | or
-        |
-        | 'except'  =>['find'],
-        */
+       |--------------------------------------------------------------------------
+       | Methods Allowed
+       |--------------------------------------------------------------------------
+       |
+       | methods cacheable : all, paginate, find, findByField, findWhere, getByCriteria
+       |
+       | Ex:
+       |
+       | 'only'  =>['all','paginate'],
+       |
+       | or
+       |
+       | 'except'  =>['find'],
+       */
         'allowed' => [
             'only' => null,
             'except' => null,

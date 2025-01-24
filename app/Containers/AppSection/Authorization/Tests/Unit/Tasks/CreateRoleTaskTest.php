@@ -5,7 +5,7 @@ namespace App\Containers\AppSection\Authorization\Tests\Unit\Tasks;
 use App\Containers\AppSection\Authorization\Data\Repositories\RoleRepository;
 use App\Containers\AppSection\Authorization\Tasks\CreateRoleTask;
 use App\Containers\AppSection\Authorization\Tests\UnitTestCase;
-use App\Ship\Exceptions\CreateResourceFailedException;
+use App\Ship\Exceptions\CreateResourceFailed;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(CreateRoleTask::class)]
@@ -27,7 +27,7 @@ final class CreateRoleTaskTest extends UnitTestCase
 
     public function testCatchesAllExceptionsAndThrowsCustomException(): void
     {
-        $this->expectException(CreateResourceFailedException::class);
+        $this->expectException(CreateResourceFailed::class);
 
         $name = 'MEga_AdmIn';
         $description = 'The One above all';

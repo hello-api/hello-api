@@ -3,7 +3,6 @@
 namespace App\Containers\AppSection\User\Tests\Unit\Models;
 
 use App\Containers\AppSection\Authentication\Notifications\VerifyEmail;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
 use App\Containers\AppSection\User\Enums\Gender;
 use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Tests\UnitTestCase;
@@ -16,7 +15,7 @@ final class UserTest extends UnitTestCase
 {
     public function testUsesCorrectTable(): void
     {
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
         $table = 'users';
 
         $this->assertSame($table, $user->getTable());
@@ -24,7 +23,7 @@ final class UserTest extends UnitTestCase
 
     public function testHasCorrectFillableFields(): void
     {
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
         $fillables = [
             'name',
             'email',
@@ -38,7 +37,7 @@ final class UserTest extends UnitTestCase
 
     public function testHasCorrectCasts(): void
     {
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
         $casts = [
             'id' => 'int',
             'email_verified_at' => 'immutable_datetime',
@@ -52,7 +51,7 @@ final class UserTest extends UnitTestCase
 
     public function testHasCorrectHiddenFields(): void
     {
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
         $hiddens = [
             'password',
             'remember_token',
@@ -63,7 +62,7 @@ final class UserTest extends UnitTestCase
 
     public function testHasCorrectResourceKey(): void
     {
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
 
         $this->assertSame('User', $user->getResourceKey());
     }
@@ -71,7 +70,7 @@ final class UserTest extends UnitTestCase
     public function testSendEmailVerificationNotificationWithVerificationUrl(): void
     {
         Notification::fake();
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
 
         $user->sendEmailVerificationNotificationWithVerificationUrl('http://localhost');
 
@@ -80,7 +79,7 @@ final class UserTest extends UnitTestCase
 
     public function testGetHashedEmailForVerification(): void
     {
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
 
         $hashedEmail = $user->getHashedEmailForVerification();
 
@@ -90,7 +89,7 @@ final class UserTest extends UnitTestCase
     public function testUsesEmailFieldAsDefaultLoginFieldFallback(): void
     {
         config()->unset('appSection-authentication.login.fields');
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
 
         $result = (new User())->findForPassport($user->email);
 
@@ -100,7 +99,7 @@ final class UserTest extends UnitTestCase
     public function testCanAuthenticateUsingAllowedLoginFields(): void
     {
         config()->set('appSection-authentication.login.fields', ['name' => []]);
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
 
         $result = (new User())->findForPassport($user->name);
 
@@ -112,7 +111,7 @@ final class UserTest extends UnitTestCase
         $original = 'GanDalf@thE.Gray';
         $expectedGet = 'gandalf@the.gray';
         $expectedSet = 'GanDalf@thE.Gray';
-        $user = UserFactory::new()->createOne(['email' => $original]);
+        $user = User::factory()->createOne(['email' => $original]);
 
         $this->assertSame($expectedGet, $user->email);
         $this->assertSame($expectedSet, DB::query()->from('users')->find($user->id)->email);

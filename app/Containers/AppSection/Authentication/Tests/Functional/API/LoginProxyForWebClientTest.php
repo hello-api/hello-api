@@ -11,6 +11,13 @@ final class LoginProxyForWebClientTest extends ApiTestCase
 {
     protected string $endpoint = 'post@v1/clients/web/login';
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->setupPasswordGrantClient();
+    }
+
     public function testProxyLogin(): void
     {
         $data = [
@@ -103,7 +110,7 @@ final class LoginProxyForWebClientTest extends ApiTestCase
         )->etc());
     }
 
-    public function testGivenWrongCredentialThrow422(): void
+    public function testGivenWrongCredentialThrowException(): void
     {
         $data = [
             'email' => 'ganldalf@the.grey',
@@ -112,6 +119,6 @@ final class LoginProxyForWebClientTest extends ApiTestCase
 
         $response = $this->makeCall($data);
 
-        $response->assertUnauthorized();
+        $response->assertUnprocessable();
     }
 }

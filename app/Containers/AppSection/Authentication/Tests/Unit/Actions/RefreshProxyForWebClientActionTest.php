@@ -13,6 +13,13 @@ use PHPUnit\Framework\Attributes\UsesClass;
 #[CoversClass(RefreshProxyForWebClientAction::class)]
 final class RefreshProxyForWebClientActionTest extends UnitTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->setupPasswordGrantClient();
+    }
+
     public function testCanRefreshToken(): void
     {
         $data = [

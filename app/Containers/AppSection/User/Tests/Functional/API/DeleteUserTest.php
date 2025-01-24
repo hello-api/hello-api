@@ -2,7 +2,7 @@
 
 namespace App\Containers\AppSection\User\Tests\Functional\API;
 
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Tests\Functional\ApiTestCase;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
@@ -18,7 +18,7 @@ final class DeleteUserTest extends ApiTestCase
 
     public function testCanDeleteSelfAsAdmin(): void
     {
-        $this->testingUser = UserFactory::new()->admin()->createOne();
+        $this->testingUser = User::factory()->admin()->createOne();
 
         $response = $this->injectId($this->testingUser->id, replace: '{user_id}')->makeCall();
 
@@ -27,9 +27,9 @@ final class DeleteUserTest extends ApiTestCase
 
     public function testCanDeleteAnotherUserAsAdmin(): void
     {
-        $this->testingUser = UserFactory::new()->admin()->createOne();
+        $this->testingUser = User::factory()->admin()->createOne();
 
-        $response = $this->injectId(UserFactory::new()->createOne()->id, replace: '{user_id}')->makeCall();
+        $response = $this->injectId(User::factory()->createOne()->id, replace: '{user_id}')->makeCall();
 
         $response->assertNoContent();
     }

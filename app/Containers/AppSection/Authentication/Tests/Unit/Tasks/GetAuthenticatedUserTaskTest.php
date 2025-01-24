@@ -4,7 +4,6 @@ namespace App\Containers\AppSection\Authentication\Tests\Unit\Tasks;
 
 use App\Containers\AppSection\Authentication\Tasks\GetAuthenticatedUserTask;
 use App\Containers\AppSection\Authentication\Tests\UnitTestCase;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
 use App\Containers\AppSection\User\Models\User;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -13,7 +12,7 @@ final class GetAuthenticatedUserTaskTest extends UnitTestCase
 {
     public function testCanGetAuthenticatedUser(): void
     {
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
         auth()->setUser($user);
         $task = app(GetAuthenticatedUserTask::class);
 

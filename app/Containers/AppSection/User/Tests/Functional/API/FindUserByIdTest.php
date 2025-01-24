@@ -2,7 +2,7 @@
 
 namespace App\Containers\AppSection\User\Tests\Functional\API;
 
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Tests\Functional\ApiTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
@@ -19,7 +19,7 @@ final class FindUserByIdTest extends ApiTestCase
 
     public function testCanFindSelfAsAdmin(): void
     {
-        $this->testingUser = UserFactory::new()->admin()->createOne();
+        $this->testingUser = User::factory()->admin()->createOne();
 
         $response = $this->injectId($this->testingUser->id, replace: '{user_id}')->makeCall();
 
@@ -33,9 +33,9 @@ final class FindUserByIdTest extends ApiTestCase
 
     public function testCanFindAnotherUserAsAdmin(): void
     {
-        $this->testingUser = UserFactory::new()->admin()->createOne();
+        $this->testingUser = User::factory()->admin()->createOne();
 
-        $response = $this->injectId(UserFactory::new()->createOne()->id, replace: '{user_id}')->makeCall();
+        $response = $this->injectId(User::factory()->createOne()->id, replace: '{user_id}')->makeCall();
 
         $response->assertOk();
     }

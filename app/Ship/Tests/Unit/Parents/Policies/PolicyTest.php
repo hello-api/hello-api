@@ -4,7 +4,7 @@ namespace App\Ship\Tests\Unit\Parents\Policies;
 
 use App\Containers\AppSection\User\Models\User;
 use App\Ship\Parents\Policies\Policy;
-use App\Ship\Parents\Providers\MainServiceProvider;
+use App\Ship\Parents\Providers\ServiceProvider;
 use App\Ship\Parents\Requests\Request;
 use App\Ship\Tests\ShipTestCase;
 use Illuminate\Contracts\Auth\Access\Gate;
@@ -59,7 +59,7 @@ class FakeUser extends User
 {
 }
 
-class FakeServiceProvider extends MainServiceProvider
+class FakeServiceProvider extends ServiceProvider
 {
     protected array $policies = [
         FakeUser::class => FakeUserPolicy::class,

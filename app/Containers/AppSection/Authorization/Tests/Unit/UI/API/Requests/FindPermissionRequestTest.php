@@ -2,7 +2,7 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Unit\UI\API\Requests;
 
-use App\Containers\AppSection\Authorization\Data\Factories\PermissionFactory;
+use App\Containers\AppSection\Authorization\Models\Permission;
 use App\Containers\AppSection\Authorization\Tests\UnitTestCase;
 use App\Containers\AppSection\Authorization\UI\API\Requests\FindPermissionByIdRequest;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -44,7 +44,7 @@ final class FindPermissionRequestTest extends UnitTestCase
     public function testAuthorizeMethodGateCall(): void
     {
         $user = $this->getTestingUser(access: ['permissions' => 'manage-permissions']);
-        $request = FindPermissionByIdRequest::injectData([], $user)->withUrlParameters(['permission_id' => PermissionFactory::new()->createOne()->id]);
+        $request = FindPermissionByIdRequest::injectData([], $user)->withUrlParameters(['permission_id' => Permission::factory()->createOne()->id]);
 
         $this->assertTrue($request->authorize());
     }

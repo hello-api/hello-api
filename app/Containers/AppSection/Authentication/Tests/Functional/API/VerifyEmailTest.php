@@ -4,7 +4,7 @@ namespace App\Containers\AppSection\Authentication\Tests\Functional\API;
 
 use App\Containers\AppSection\Authentication\Notifications\EmailVerified;
 use App\Containers\AppSection\Authentication\Tests\Functional\ApiTestCase;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 use PHPUnit\Framework\Attributes\CoversNothing;
@@ -22,7 +22,7 @@ final class VerifyEmailTest extends ApiTestCase
     public function testVerifyEmail(): void
     {
         Notification::fake();
-        $unverifiedUser = UserFactory::new()->unverified()->createOne();
+        $unverifiedUser = User::factory()->unverified()->createOne();
         $hashedEmail = sha1($unverifiedUser->getEmailForVerification());
         // enable email verification
         config()->set('appSection-authentication.require_email_verification', true);
@@ -53,7 +53,7 @@ final class VerifyEmailTest extends ApiTestCase
     public function testVerifyEmailShouldNotBeAcceptedIfRoutesSignatureIsNotVerified(): void
     {
         Notification::fake();
-        $unverifiedUser = UserFactory::new()->unverified()->createOne();
+        $unverifiedUser = User::factory()->unverified()->createOne();
         $hashedEmail = sha1($unverifiedUser->getEmailForVerification());
         // enable email verification
         config()->set('appSection-authentication.require_email_verification', true);

@@ -5,7 +5,7 @@ namespace App\Containers\AppSection\Authentication\Tests\Unit\Actions;
 use App\Containers\AppSection\Authentication\Actions\WebLoginAction;
 use App\Containers\AppSection\Authentication\Tests\UnitTestCase;
 use App\Containers\AppSection\Authentication\UI\WEB\Requests\LoginRequest;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\MessageBag;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -195,7 +195,7 @@ final class WebLoginActionTest extends UnitTestCase
             'email' => 'gandalf@the.grey',
             'password' => 'youShallNotPass',
         ];
-        $user = UserFactory::new()->createOne($credentials);
+        $user = User::factory()->createOne($credentials);
         $request = LoginRequest::injectData($credentials);
         $action = app(WebLoginAction::class);
 
@@ -212,7 +212,7 @@ final class WebLoginActionTest extends UnitTestCase
             ...$loginFields,
             'password' => 'youShallNotPass',
         ];
-        $user = UserFactory::new()->createOne($credentials);
+        $user = User::factory()->createOne($credentials);
         $request = LoginRequest::injectData($credentials);
         $action = app(WebLoginAction::class);
 
@@ -242,7 +242,7 @@ final class WebLoginActionTest extends UnitTestCase
             ...$loginFields,
             'password' => 'youShallNotPass',
         ];
-        UserFactory::new()->createOne($credentials);
+        User::factory()->createOne($credentials);
         $request = LoginRequest::injectData($credentials);
         $action = app(WebLoginAction::class);
 
@@ -257,7 +257,7 @@ final class WebLoginActionTest extends UnitTestCase
             'name' => 'gandalf',
             'password' => 'youShallNotPass',
         ];
-        UserFactory::new()->createOne($credentials);
+        User::factory()->createOne($credentials);
         $authSpy = Auth::spy();
         $authSpy->allows()->guard('web')->andReturnSelf();
         $authSpy->allows()->attempt($credentials)->andReturn(false);
@@ -284,7 +284,7 @@ final class WebLoginActionTest extends UnitTestCase
             'name' => 'gandalf',
             'password' => 'youShallNotPass',
         ];
-        $user = UserFactory::new()->createOne($userDetails);
+        $user = User::factory()->createOne($userDetails);
         $credentials = [
             'email' => 'ganldalf@the.white', // wrong email
             'name' => 'gandalf', // correct name

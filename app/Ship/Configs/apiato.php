@@ -1,8 +1,6 @@
 <?php
 
 use App\Containers\AppSection\User\Models\User;
-use App\Ship\Seeders\SeedDeploymentData;
-use App\Ship\Seeders\SeedTestingData;
 
 return [
     /*
@@ -19,20 +17,6 @@ return [
         |--------------------------------------------------------------------------
         */
         'url' => env('API_URL', 'http://localhost'),
-
-        /*
-        |--------------------------------------------------------------------------
-        | API Prefix
-        |--------------------------------------------------------------------------
-        */
-        'prefix' => env('API_PREFIX', '/'),
-
-        /*
-        |--------------------------------------------------------------------------
-        | API Version Prefix
-        |--------------------------------------------------------------------------
-        */
-        'enable_version_prefix' => true,
 
         /*
         |--------------------------------------------------------------------------
@@ -56,17 +40,6 @@ return [
 
         /*
         |--------------------------------------------------------------------------
-        | Enable Disable API Debugging
-        |--------------------------------------------------------------------------
-        |
-        | If enabled, the Error Exception trace will be injected in the JSON
-        | response, and it will be logged in the default Log file.
-        |
-        */
-        'debug' => env('API_DEBUG', false),
-
-        /*
-        |--------------------------------------------------------------------------
         | Enable/Disable Implicit Grant
         |--------------------------------------------------------------------------
         */
@@ -81,7 +54,8 @@ return [
         | `attempts` is the number of attempts per `expires` in minutes.
         |
         */
-        'throttle' => [
+        'rate-limiter' => [
+            'name' => env('GLOBAL_API_RATE_LIMIT_NAME', 'api'),
             'enabled' => env('GLOBAL_API_RATE_LIMIT_ENABLED', true),
             'attempts' => env('GLOBAL_API_RATE_LIMIT_ATTEMPTS_PER_MIN', '30'),
             'expires' => env('GLOBAL_API_RATE_LIMIT_EXPIRES_IN_MIN', '1'),
@@ -154,17 +128,6 @@ return [
             // TODO: BC: remove this after removing its usage in ResponseTrait in Core
             'filter' => 'filter',
         ],
-    ],
-
-    'seeders' => [
-        /*
-        |--------------------------------------------------------------------------
-        | Special seeders for apiato:seed-deploy & apiato:seed-test commands
-        |--------------------------------------------------------------------------
-        |
-        */
-        'deployment' => SeedDeploymentData::class,
-        'testing' => SeedTestingData::class,
     ],
 
     'tests' => [

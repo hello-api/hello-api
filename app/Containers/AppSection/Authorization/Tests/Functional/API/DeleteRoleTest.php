@@ -2,7 +2,7 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Functional\API;
 
-use App\Containers\AppSection\Authorization\Data\Factories\RoleFactory;
+use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\AppSection\Authorization\Tests\Functional\ApiTestCase;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
@@ -18,7 +18,7 @@ final class DeleteRoleTest extends ApiTestCase
 
     public function testCanDeleteRole(): void
     {
-        $role = RoleFactory::new()->createOne();
+        $role = Role::factory()->createOne();
 
         $response = $this->injectId($role->id, replace: '{role_id}')->makeCall();
 

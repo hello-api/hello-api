@@ -4,7 +4,7 @@ namespace App\Containers\AppSection\Authentication\Tests\Unit\Tasks;
 
 use App\Containers\AppSection\Authentication\Tasks\CreatePasswordResetTokenTask;
 use App\Containers\AppSection\Authentication\Tests\UnitTestCase;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -14,7 +14,7 @@ final class CreatePasswordResetTokenTaskTest extends UnitTestCase
 {
     public function testCreatePasswordResetTask(): void
     {
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
         $task = app(CreatePasswordResetTokenTask::class);
 
         $token = $task->run($user);

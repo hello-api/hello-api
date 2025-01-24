@@ -2,9 +2,9 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Functional\API;
 
-use App\Containers\AppSection\Authorization\Data\Factories\PermissionFactory;
+use App\Containers\AppSection\Authorization\Models\Permission;
 use App\Containers\AppSection\Authorization\Tests\Functional\ApiTestCase;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
@@ -20,8 +20,8 @@ final class GivePermissionsToUserTest extends ApiTestCase
 
     public function testGiveSinglePermission(): void
     {
-        $user = UserFactory::new()->createOne();
-        $permission = PermissionFactory::new()->createOne();
+        $user = User::factory()->createOne();
+        $permission = Permission::factory()->createOne();
         $data = [
             'permission_ids' => [$permission->getHashedKey()],
         ];
@@ -42,9 +42,9 @@ final class GivePermissionsToUserTest extends ApiTestCase
 
     public function testGiveMultiplePermissions(): void
     {
-        $user = UserFactory::new()->createOne();
-        $permissionA = PermissionFactory::new()->createOne();
-        $permissionB = PermissionFactory::new()->createOne();
+        $user = User::factory()->createOne();
+        $permissionA = Permission::factory()->createOne();
+        $permissionB = Permission::factory()->createOne();
         $data = [
             'permission_ids' => [$permissionA->getHashedKey(), $permissionB->getHashedKey()],
         ];
@@ -66,7 +66,7 @@ final class GivePermissionsToUserTest extends ApiTestCase
 
     public function testGiveNonExistingPermission(): void
     {
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
         $invalidId = $this->encode(7777777);
         $data = [
             'permission_ids' => [$invalidId],
@@ -88,7 +88,7 @@ final class GivePermissionsToUserTest extends ApiTestCase
 
     public function testAttachPermissionToNonExistingRole(): void
     {
-        $permission = PermissionFactory::new()->createOne();
+        $permission = Permission::factory()->createOne();
         $invalidId = $this->encode(7777777);
         $data = [
             'permission_ids' => [$permission->getHashedKey()],

@@ -2,7 +2,7 @@
 
 namespace App\Ship\Parents\Policies;
 
-use Apiato\Core\Abstracts\Policies\Policy as AbstractPolicy;
+use Apiato\Abstract\Policies\Policy as AbstractPolicy;
 use App\Ship\Contracts\Authorizable;
 
 abstract class Policy extends AbstractPolicy

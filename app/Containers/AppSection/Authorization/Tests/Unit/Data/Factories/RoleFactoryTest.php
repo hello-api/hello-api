@@ -13,7 +13,7 @@ final class RoleFactoryTest extends UnitTestCase
 {
     public function testCanCreateRole(): void
     {
-        $role = RoleFactory::new()->createOne();
+        $role = Role::factory()->createOne();
 
         $this->assertInstanceOf(Role::class, $role);
     }
@@ -27,14 +27,14 @@ final class RoleFactoryTest extends UnitTestCase
         $adminRole->delete();
         $this->assertModelMissing($adminRole);
 
-        $role = RoleFactory::new()->admin()->createOne();
+        $role = Role::factory()->admin()->createOne();
 
         $this->assertSame($roleName, $role->name);
     }
 
     public function testCanSetGuard(): void
     {
-        $role = RoleFactory::new()->withGuard(AuthGuard::API->value)->createOne();
+        $role = Role::factory()->withGuard(AuthGuard::API->value)->createOne();
 
         $this->assertSame(AuthGuard::API->value, $role->guard_name);
     }

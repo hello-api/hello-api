@@ -2,7 +2,7 @@
 
 namespace App\Containers\AppSection\User\Tests\Functional\API;
 
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Tests\Functional\ApiTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
@@ -42,7 +42,7 @@ final class GetUserProfileTest extends ApiTestCase
 
     public function testCannotGetProfileByUnauthenticatedUser(): void
     {
-        $this->testingUser = UserFactory::new()->createOne();
+        $this->testingUser = User::factory()->createOne();
 
         $response = $this->auth(false)->makeCall();
 

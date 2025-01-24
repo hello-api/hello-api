@@ -2,13 +2,11 @@
 
 namespace App\Containers\AppSection\User\Tests\Functional\API;
 
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Tests\Functional\ApiTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
-use PHPUnit\Framework\Attributes\Group;
 
-#[Group('user')]
 #[CoversNothing]
 final class ListUsersTest extends ApiTestCase
 {
@@ -21,8 +19,8 @@ final class ListUsersTest extends ApiTestCase
 
     public function testCanIndexUsersAsAdmin(): void
     {
-        $this->testingUser = UserFactory::new()->admin()->createOne();
-        UserFactory::new()->count(2)->create();
+        $this->testingUser = User::factory()->admin()->createOne();
+        User::factory()->count(2)->create();
 
         $response = $this->makeCall();
 

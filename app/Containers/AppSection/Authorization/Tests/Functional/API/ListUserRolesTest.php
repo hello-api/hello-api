@@ -2,9 +2,9 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Functional\API;
 
-use App\Containers\AppSection\Authorization\Data\Factories\RoleFactory;
+use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\AppSection\Authorization\Tests\Functional\ApiTestCase;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
@@ -19,8 +19,8 @@ final class ListUserRolesTest extends ApiTestCase
 
     public function testGetUserRoles(): void
     {
-        $user = UserFactory::new()->createOne();
-        $role = RoleFactory::new()->createOne();
+        $user = User::factory()->createOne();
+        $role = Role::factory()->createOne();
         $user->assignRole($role);
 
         $response = $this->injectId($user->id, replace: '{user_id}')->makeCall();

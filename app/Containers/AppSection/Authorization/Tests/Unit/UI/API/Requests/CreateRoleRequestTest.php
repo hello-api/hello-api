@@ -34,7 +34,7 @@ final class CreateRoleRequestTest extends UnitTestCase
         $rules = $this->request->rules();
 
         $this->assertSame([
-            'name' => 'required|unique:' . config('permission.table_names.roles') . ',name|min:2|max:20|no_spaces',
+            'name' => 'required|unique:' . config('permission.table_names.roles') . ',name|min:2|max:20|alpha',
             'description' => 'max:255',
             'display_name' => 'max:100',
         ], $rules);
