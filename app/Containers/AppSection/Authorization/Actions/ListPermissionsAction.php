@@ -2,7 +2,6 @@
 
 namespace App\Containers\AppSection\Authorization\Actions;
 
-use Apiato\Core\Exceptions\CoreInternalErrorException;
 use App\Containers\AppSection\Authorization\Data\Collections\PermissionCollection;
 use App\Containers\AppSection\Authorization\Data\Repositories\PermissionRepository;
 use App\Ship\Parents\Actions\Action as ParentAction;
@@ -18,7 +17,6 @@ class ListPermissionsAction extends ParentAction
     }
 
     /**
-     * @throws CoreInternalErrorException
      * @throws RepositoryException
      * @throws BindingResolutionException
      */

@@ -3,10 +3,10 @@
 namespace App\Containers\AppSection\Authorization\Tests\Unit\Actions;
 
 use App\Containers\AppSection\Authorization\Actions\GivePermissionsToUserAction;
-use App\Containers\AppSection\Authorization\Data\Factories\PermissionFactory;
+use App\Containers\AppSection\Authorization\Models\Permission;
 use App\Containers\AppSection\Authorization\Tests\UnitTestCase;
 use App\Containers\AppSection\Authorization\UI\API\Requests\GivePermissionsToUserRequest;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(GivePermissionsToUserAction::class)]
@@ -14,8 +14,8 @@ final class GivePermissionsToUserActionTest extends UnitTestCase
 {
     public function testCanGiveSinglePermission(): void
     {
-        $user = UserFactory::new()->createOne();
-        $permission = PermissionFactory::new()->createOne();
+        $user = User::factory()->createOne();
+        $permission = Permission::factory()->createOne();
         $data = [
             'permission_ids' => [$permission->getHashedKey()],
         ];
@@ -30,9 +30,9 @@ final class GivePermissionsToUserActionTest extends UnitTestCase
 
     public function testCanGiveMultiplePermissions(): void
     {
-        $user = UserFactory::new()->createOne();
-        $permissionA = PermissionFactory::new()->createOne();
-        $permissionB = PermissionFactory::new()->createOne();
+        $user = User::factory()->createOne();
+        $permissionA = Permission::factory()->createOne();
+        $permissionB = Permission::factory()->createOne();
         $data = [
             'permission_ids' => [$permissionA->getHashedKey(), $permissionB->getHashedKey()],
         ];

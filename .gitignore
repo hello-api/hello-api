@@ -12,6 +12,7 @@ _ide_helper*.php
 /psalm_cache/
 /app/Containers/Vendor
 .DS_Store
+.phpstorm.meta.php
 
 # Laravel
 /.phpunit.cache

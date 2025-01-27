@@ -4,7 +4,7 @@ namespace App\Containers\AppSection\Authorization\Tasks;
 
 use App\Containers\AppSection\Authorization\Data\Repositories\PermissionRepository;
 use App\Containers\AppSection\Authorization\Models\Permission;
-use App\Ship\Exceptions\CreateResourceFailedException;
+use App\Ship\Exceptions\CreateResourceFailed;
 use App\Ship\Parents\Tasks\Task as ParentTask;
 
 class CreatePermissionTask extends ParentTask
@@ -15,7 +15,7 @@ class CreatePermissionTask extends ParentTask
     }
 
     /**
-     * @throws CreateResourceFailedException
+     * @throws CreateResourceFailed
      */
     public function run(string $name, string|null $description = null, string|null $displayName = null, string $guardName = 'api'): Permission
     {
@@ -27,7 +27,7 @@ class CreatePermissionTask extends ParentTask
                 'guard_name' => $guardName,
             ]);
         } catch (\Exception) {
-            throw new CreateResourceFailedException();
+            throw CreateResourceFailed::create('Permission');
         }
 
         return $permission;

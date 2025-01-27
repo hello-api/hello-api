@@ -5,7 +5,7 @@ namespace App\Containers\AppSection\Authorization\Actions;
 use App\Containers\AppSection\Authorization\UI\API\Requests\AssignRolesToUserRequest;
 use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Tasks\FindUserByIdTask;
-use App\Ship\Exceptions\NotFoundException;
+use App\Ship\Exceptions\ResourceNotFound;
 use App\Ship\Parents\Actions\Action as ParentAction;
 
 class AssignRolesToUserAction extends ParentAction
@@ -16,7 +16,7 @@ class AssignRolesToUserAction extends ParentAction
     }
 
     /**
-     * @throws NotFoundException
+     * @throws ResourceNotFound
      */
     public function run(AssignRolesToUserRequest $request): User
     {

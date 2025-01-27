@@ -3,14 +3,13 @@
 namespace App\Containers\AppSection\Authentication\Tests\Unit\Actions;
 
 use App\Containers\AppSection\Authentication\Actions\ResetPasswordAction;
-use App\Containers\AppSection\Authentication\Exceptions\InvalidResetPasswordTokenException;
+use App\Containers\AppSection\Authentication\Exceptions\InvalidResetPasswordToken;
 use App\Containers\AppSection\Authentication\Notifications\PasswordReset;
 use App\Containers\AppSection\Authentication\Tasks\CreatePasswordResetTokenTask;
 use App\Containers\AppSection\Authentication\Tests\UnitTestCase;
 use App\Containers\AppSection\Authentication\UI\API\Requests\ResetPasswordRequest;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
 use App\Containers\AppSection\User\Models\User;
-use App\Ship\Exceptions\NotFoundException;
+use App\Ship\Exceptions\ResourceNotFound;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -40,8 +39,8 @@ final class ResetPasswordActionTest extends UnitTestCase
 
     public function testResetPasswordWithInvalidTokenThrowsException(): void
     {
-        $this->expectException(InvalidResetPasswordTokenException::class);
-        $this->expectExceptionMessage('Invalid Reset Password Token Provided.');
+        $this->expectException(InvalidResetPasswordToken::class);
+        $this->expectExceptionMessage('Invalid Reset Password Token.');
 
         $data = [
             'email' => $this->user->email,
@@ -55,8 +54,8 @@ final class ResetPasswordActionTest extends UnitTestCase
 
     public function testResetPasswordWithInvalidEmailThrowsException(): void
     {
-        $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage('User Not Found.');
+        $this->expectException(ResourceNotFound::class);
+        $this->expectExceptionMessage('User not found.');
 
         $token = app(CreatePasswordResetTokenTask::class)->run($this->user);
         $data = [
@@ -73,7 +72,7 @@ final class ResetPasswordActionTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->user = UserFactory::new()->createOne([
+        $this->user = User::factory()->createOne([
             'email' => 'ganldalf@the.grey',
             'password' => 'youShallNotPass',
         ]);

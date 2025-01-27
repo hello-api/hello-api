@@ -2,8 +2,8 @@
 
 namespace App\Containers\AppSection\User\Tests\Functional\API;
 
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
 use App\Containers\AppSection\User\Enums\Gender;
+use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Tests\Functional\ApiTestCase;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Carbon;
@@ -23,7 +23,7 @@ final class UpdateUserTest extends ApiTestCase
 
     public function testCanUpdateAsOwner(): void
     {
-        $this->testingUser = UserFactory::new()->createOne([
+        $this->testingUser = User::factory()->createOne([
             'name' => 'He who must not be named',
             'gender' => Gender::FEMALE,
             'password' => 'Av@dakedavra!',

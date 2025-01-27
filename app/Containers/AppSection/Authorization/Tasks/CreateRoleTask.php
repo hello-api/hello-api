@@ -4,7 +4,7 @@ namespace App\Containers\AppSection\Authorization\Tasks;
 
 use App\Containers\AppSection\Authorization\Data\Repositories\RoleRepository;
 use App\Containers\AppSection\Authorization\Models\Role;
-use App\Ship\Exceptions\CreateResourceFailedException;
+use App\Ship\Exceptions\CreateResourceFailed;
 use App\Ship\Parents\Tasks\Task as ParentTask;
 
 class CreateRoleTask extends ParentTask
@@ -15,7 +15,7 @@ class CreateRoleTask extends ParentTask
     }
 
     /**
-     * @throws CreateResourceFailedException
+     * @throws CreateResourceFailed
      */
     public function run(string $name, string|null $description = null, string|null $displayName = null, string $guardName = 'api'): Role
     {
@@ -27,7 +27,7 @@ class CreateRoleTask extends ParentTask
                 'guard_name' => $guardName,
             ]);
         } catch (\Exception) {
-            throw new CreateResourceFailedException();
+            throw CreateResourceFailed::create('Role');
         }
 
         return $role;

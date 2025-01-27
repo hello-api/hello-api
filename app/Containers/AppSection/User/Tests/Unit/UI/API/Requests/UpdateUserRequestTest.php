@@ -2,7 +2,6 @@
 
 namespace App\Containers\AppSection\User\Tests\Unit\UI\API\Requests;
 
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
 use App\Containers\AppSection\User\Enums\Gender;
 use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Tests\UnitTestCase;
@@ -52,7 +51,7 @@ final class UpdateUserRequestTest extends UnitTestCase
 
     public function testAuthorizeMethodGateCall(): void
     {
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
         $request = UpdateUserRequest::injectData([], $user)
             ->withUrlParameters([
                 'user_id' => $user->id,

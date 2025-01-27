@@ -2,8 +2,8 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Functional\API;
 
-use App\Containers\AppSection\Authorization\Data\Factories\PermissionFactory;
-use App\Containers\AppSection\Authorization\Data\Factories\RoleFactory;
+use App\Containers\AppSection\Authorization\Models\Permission;
+use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\AppSection\Authorization\Tests\Functional\ApiTestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
@@ -20,9 +20,9 @@ final class RevokeRolePermissionsTest extends ApiTestCase
 
     public function testDetachSinglePermissionFromRole(): void
     {
-        $permissionA = PermissionFactory::new()->createOne();
-        $permissionB = PermissionFactory::new()->createOne();
-        $role = RoleFactory::new()->createOne();
+        $permissionA = Permission::factory()->createOne();
+        $permissionB = Permission::factory()->createOne();
+        $role = Role::factory()->createOne();
         $role->givePermissionTo([$permissionA, $permissionB]);
         $data = [
             'permission_ids' => [$permissionA->getHashedKey()],
@@ -43,10 +43,10 @@ final class RevokeRolePermissionsTest extends ApiTestCase
 
     public function testDetachMultiplePermissionFromRole(): void
     {
-        $permissionA = PermissionFactory::new()->createOne();
-        $permissionB = PermissionFactory::new()->createOne();
-        $permissionC = PermissionFactory::new()->createOne();
-        $role = RoleFactory::new()->createOne();
+        $permissionA = Permission::factory()->createOne();
+        $permissionB = Permission::factory()->createOne();
+        $permissionC = Permission::factory()->createOne();
+        $role = Role::factory()->createOne();
         $role->givePermissionTo([$permissionA, $permissionB, $permissionC]);
         $data = [
             'permission_ids' => [$permissionA->getHashedKey(), $permissionC->getHashedKey()],
@@ -67,7 +67,7 @@ final class RevokeRolePermissionsTest extends ApiTestCase
 
     public function testDetachPermissionFromNonExistingRole(): void
     {
-        $permission = PermissionFactory::new()->createOne();
+        $permission = Permission::factory()->createOne();
         $invalidId = 7777777;
         $data = [
             'permission_ids' => [$permission->getHashedKey()],
@@ -85,7 +85,7 @@ final class RevokeRolePermissionsTest extends ApiTestCase
 
     public function testDetachNonExistingPermissionFromRole(): void
     {
-        $role = RoleFactory::new()->createOne();
+        $role = Role::factory()->createOne();
         $invalidId = 7777777;
         $data = [
             'permission_ids' => [$this->encode($invalidId)],

@@ -2,7 +2,7 @@
 
 namespace App\Containers\AppSection\User\Tests\Functional\API;
 
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Tests\Functional\ApiTestCase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -20,7 +20,7 @@ final class UpdateUserPasswordTest extends ApiTestCase
 
     public function testCanUpdatePasswordAsOwner(): void
     {
-        $this->testingUser = UserFactory::new()->createOne([
+        $this->testingUser = User::factory()->createOne([
             'password' => 'Av@dakedavra!',
         ]);
         $data = [

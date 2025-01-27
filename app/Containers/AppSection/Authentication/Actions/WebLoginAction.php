@@ -2,7 +2,7 @@
 
 namespace App\Containers\AppSection\Authentication\Actions;
 
-use Apiato\Core\Exceptions\IncorrectIdException;
+use Apiato\Exceptions\IncorrectId;
 use App\Containers\AppSection\Authentication\Classes\LoginFieldParser;
 use App\Containers\AppSection\Authentication\UI\WEB\Requests\LoginRequest;
 use App\Containers\AppSection\Authentication\Values\IncomingLoginField;
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 class WebLoginAction extends ParentAction
 {
     /**
-     * @throws IncorrectIdException
+     * @throws IncorrectId
      */
     public function run(LoginRequest $request): RedirectResponse
     {

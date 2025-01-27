@@ -2,7 +2,7 @@
 
 namespace App\Ship\Parents\Values;
 
-use Apiato\Core\Abstracts\Values\Value as AbstractValue;
+use Apiato\Abstract\Values\Value as AbstractValue;
 
 abstract class Value extends AbstractValue
 {

@@ -2,8 +2,8 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Functional\API;
 
-use App\Containers\AppSection\Authorization\Data\Factories\PermissionFactory;
-use App\Containers\AppSection\Authorization\Data\Factories\RoleFactory;
+use App\Containers\AppSection\Authorization\Models\Permission;
+use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\AppSection\Authorization\Tests\Functional\ApiTestCase;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
@@ -19,8 +19,8 @@ final class ListRolePermissionsTest extends ApiTestCase
 
     public function testGetRolePermissions(): void
     {
-        $role = RoleFactory::new()->createOne();
-        $permission = PermissionFactory::new()->createOne();
+        $role = Role::factory()->createOne();
+        $permission = Permission::factory()->createOne();
         $role->givePermissionTo([$permission]);
 
         $response = $this->injectId($role->id, replace: '{role_id}')->makeCall();

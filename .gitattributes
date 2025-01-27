@@ -10,7 +10,3 @@
 /.ddev export-ignore
 .env.ci export-ignore
 .gitattributes export-ignore
-.editorconfig export-ignore
-.php-cs-fixer.dist.php export-ignore
-psalm.xml export-ignore
-ruleset.xml export-ignore

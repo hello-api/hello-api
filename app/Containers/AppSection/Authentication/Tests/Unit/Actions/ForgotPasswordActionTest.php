@@ -28,7 +28,7 @@ final class ForgotPasswordActionTest extends UnitTestCase
         Mail::assertQueued(ForgotPassword::class);
     }
 
-    public function testIfUserNotExistsShouldTrue(): void
+    public function testAlwaysReturnsTrue(): void
     {
         Mail::fake();
         $data = [

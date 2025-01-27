@@ -2,9 +2,9 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Functional\API;
 
-use App\Containers\AppSection\Authorization\Data\Factories\PermissionFactory;
+use App\Containers\AppSection\Authorization\Models\Permission;
 use App\Containers\AppSection\Authorization\Tests\Functional\ApiTestCase;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
@@ -19,8 +19,8 @@ final class ListUserPermissionsTest extends ApiTestCase
 
     public function testGetUserPermissions(): void
     {
-        $user = UserFactory::new()->createOne();
-        $permission = PermissionFactory::new()->createOne();
+        $user = User::factory()->createOne();
+        $permission = Permission::factory()->createOne();
         $user->givePermissionTo([$permission]);
 
         $response = $this->injectId($user->id, replace: '{user_id}')->makeCall();

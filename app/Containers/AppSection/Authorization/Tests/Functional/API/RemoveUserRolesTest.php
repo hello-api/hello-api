@@ -2,9 +2,9 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Functional\API;
 
-use App\Containers\AppSection\Authorization\Data\Factories\RoleFactory;
+use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\AppSection\Authorization\Tests\Functional\ApiTestCase;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
@@ -20,9 +20,9 @@ final class RemoveUserRolesTest extends ApiTestCase
 
     public function testRevokeRolesFromUser(): void
     {
-        $roleA = RoleFactory::new()->createOne();
-        $roleB = RoleFactory::new()->createOne();
-        $user = UserFactory::new()->createOne();
+        $roleA = Role::factory()->createOne();
+        $roleB = Role::factory()->createOne();
+        $user = User::factory()->createOne();
         $user->assignRole($roleA, $roleB);
         $data = [
             'role_ids' => [$roleA->getHashedKey()],
@@ -43,9 +43,9 @@ final class RemoveUserRolesTest extends ApiTestCase
 
     public function testRevokeManyRolesFromUser(): void
     {
-        $roleA = RoleFactory::new()->createOne();
-        $roleB = RoleFactory::new()->createOne();
-        $user = UserFactory::new()->createOne();
+        $roleA = Role::factory()->createOne();
+        $roleB = Role::factory()->createOne();
+        $user = User::factory()->createOne();
         $user->assignRole($roleA);
         $user->assignRole($roleB);
 
@@ -67,7 +67,7 @@ final class RemoveUserRolesTest extends ApiTestCase
 
     public function testRevokeRolesFromNonExistingUser(): void
     {
-        $role = RoleFactory::new()->createOne();
+        $role = Role::factory()->createOne();
         $invalidId = 7777777;
         $data = [
             'role_ids' => [$role->getHashedKey()],
@@ -85,7 +85,7 @@ final class RemoveUserRolesTest extends ApiTestCase
 
     public function testRevokeNonExistingRoleFromUser(): void
     {
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
         $invalidId = 7777777;
         $data = [
             'role_ids' => [$this->encode($invalidId)],

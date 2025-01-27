@@ -2,7 +2,7 @@
 
 namespace App\Containers\AppSection\Authentication\Tasks;
 
-use App\Containers\AppSection\Authentication\Exceptions\LoginFailedException;
+use App\Containers\AppSection\Authentication\Exceptions\LoginFailed;
 use App\Containers\AppSection\Authentication\Values\Token;
 use App\Ship\Parents\Tasks\Task as ParentTask;
 use GuzzleHttp\Utils;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Request;
 class CallOAuthServerTask extends ParentTask
 {
     /**
-     * @throws LoginFailedException
+     * @throws LoginFailed
      */
     public function run(array $data, string|null $languageHeader = null): Token
     {
@@ -27,7 +27,7 @@ class CallOAuthServerTask extends ParentTask
         $content = Utils::jsonDecode($response->getContent(), true);
 
         if (!$response->isOk()) {
-            throw new LoginFailedException($content['message'] ?? null);
+            throw LoginFailed::create();
         }
 
         return new Token($content['token_type'], $content['expires_in'], $content['access_token'], $content['refresh_token']);

@@ -2,7 +2,7 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Unit\UI\API\Transformers;
 
-use App\Containers\AppSection\Authorization\Data\Factories\PermissionFactory;
+use App\Containers\AppSection\Authorization\Models\Permission;
 use App\Containers\AppSection\Authorization\Tests\UnitTestCase;
 use App\Containers\AppSection\Authorization\UI\API\Transformers\PermissionTransformer;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -14,7 +14,7 @@ final class PermissionTransformerTest extends UnitTestCase
 
     public function testCanTransformSingleObject(): void
     {
-        $permission = PermissionFactory::new()->createOne();
+        $permission = Permission::factory()->createOne();
         $expected = [
             'object' => $permission->getResourceKey(),
             'id' => $permission->getHashedKey(),

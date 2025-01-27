@@ -58,6 +58,8 @@ final class RefreshProxyForWebClientTest extends ApiTestCase
     {
         parent::setUp();
 
+        $this->setupPasswordGrantClient();
+
         $this->data = [
             'email' => 'gandalf@the.grey',
             'password' => 'youShallNotPass',

@@ -13,9 +13,9 @@ final class ThisUserCriteriaTest extends ShipTestCase
 {
     public function testCriteria(): void
     {
-        $model2 = TestUserFactory::new()->create(['user_id' => '2']);
-        $model1 = TestUserFactory::new()->create(['user_id' => '1']);
-        $model3 = TestUserFactory::new()->create(['user_id' => '3']);
+        TestUserFactory::new()->create(['user_id' => 2]);
+        $model = TestUserFactory::new()->create(['user_id' => 1]);
+        TestUserFactory::new()->create(['user_id' => 3]);
 
         $repository = app(TestUserRepository::class);
         $criteria = new ThisUserCriteria(1);
@@ -24,6 +24,6 @@ final class ThisUserCriteriaTest extends ShipTestCase
         $result = $repository->all();
 
         $this->assertSame(1, $result->count());
-        $this->assertSame($model1->id, $result->first()->id);
+        $this->assertSame($model->id, $result->first()->id);
     }
 }
