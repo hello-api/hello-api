@@ -1,4 +1,5 @@
 {
+    "$schema": "https://getcomposer.org/schema.json",
     "name": "apiato/apiato",
     "type": "project",
     "description": "A flawless framework for building scalable and testable API-Centric Apps with PHP and Laravel.",
@@ -34,48 +35,35 @@
         }
     ],
     "require": {
-        "apiato/core": "^8.15.0",
-        "php": "^8.1",
-        "ext-curl": "*",
-        "ext-gettext": "*",
-        "ext-mbstring": "*",
-        "ext-openssl": "*",
-        "ext-pdo": "*",
-        "ext-sodium": "*",
-        "ext-tokenizer": "*",
-        "guzzlehttp/guzzle": "^7.2",
-        "laravel/framework": "^10.0",
-        "laravel/tinker": "^2.8",
+        "apiato/core": "dev-master",
+        "php": "^8.2",
         "webmozart/assert": "^1.11",
-        "wikimedia/composer-merge-plugin": "^2.1"
+        "wikimedia/composer-merge-plugin": "^2.1",
+        "laravel/passport": "^12.0"
     },
     "require-dev": {
-        "ext-intl": "*",
-        "ext-json": "*",
+        "brianium/paratest": "^7.4",
         "fakerphp/faker": "^1.19.1",
-        "friendsofphp/php-cs-fixer": "^3.8.0",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "jetbrains/phpstorm-attributes": "^1.0",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^7.0",
-        "php-standard-library/psalm-plugin": "^2.3",
+        "mohammad-alavi/apiato-rector": "dev-latest",
+        "nunomaduro/collision": "^8.0",
+        "orchestra/testbench": "^9.0",
         "phpmd/phpmd": "@stable",
-        "phpunit/phpunit": "^10.0",
-        "psalm/plugin-laravel": "^2.8",
-        "psalm/plugin-mockery": "^1.1",
-        "psalm/plugin-phpunit": "^0.18.4",
-        "roave/security-advisories": "dev-latest",
-        "spatie/laravel-ignition": "^2.0",
-        "vimeo/psalm": "^5.8.0"
+        "phpunit/phpunit": "^11.0.1",
+        "rector/rector": "^2.0",
+        "roave/security-advisories": "dev-latest"
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/",
-            "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "App\\": "app/"
         }
     },
     "autoload-dev": {
-        "psr-4": {}
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
     },
     "scripts": {
         "post-autoload-dump": [
@@ -89,13 +77,21 @@
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
         "post-create-project-cmd": [
-            "@php artisan key:generate --ansi"
+            "@php artisan key:generate --ansi",
+            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
+            "@php artisan migrate --graceful --ansi"
         ],
         "ide-helper": [
             "@php artisan ide-helper:models --nowrite --reset",
             "@php artisan ide-helper:generate",
             "@php artisan ide-helper:meta",
             "@php artisan ide-helper:eloquent"
+        ],
+        "fixer": [
+            "php-cs-fixer fix"
+        ],
+        "rector": [
+            "rector process --ansi"
         ]
     },
     "extra": {
@@ -125,7 +121,6 @@
         "allow-plugins": {
             "apiato/container-installer": true,
             "composer/package-versions-deprecated": true,
-            "pestphp/pest-plugin": true,
             "php-http/discovery": true,
             "wikimedia/composer-merge-plugin": true
         }

@@ -2,6 +2,7 @@
 
 namespace App\Containers\AppSection\Authorization\Data\Factories;
 
+use App\Containers\AppSection\Authorization\Enums\Role as RoleEnum;
 use App\Containers\AppSection\Authorization\Models\Role;
 use App\Ship\Parents\Factories\Factory as ParentFactory;
 
@@ -25,19 +26,11 @@ class RoleFactory extends ParentFactory
 
     public function admin(): static
     {
-        return $this->state(function (array $attributes) {
-            return [
-                'name' => config('appSection-authorization.admin_role'),
-            ];
-        });
+        return $this->state(fn () => ['name' => RoleEnum::SUPER_ADMIN->value]);
     }
 
     public function withGuard(string $guard): static
     {
-        return $this->state(function (array $attributes) use ($guard) {
-            return [
-                'guard_name' => $guard,
-            ];
-        });
+        return $this->state(fn () => ['guard_name' => $guard]);
     }
 }

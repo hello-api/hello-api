@@ -2,47 +2,44 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Functional\API;
 
-use App\Containers\AppSection\Authorization\Data\Factories\RoleFactory;
+use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\AppSection\Authorization\Tests\Functional\ApiTestCase;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\Authorization\UI\API\Controllers\AssignRolesToUserController;
+use App\Containers\AppSection\User\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
 final class AssignRolesToUserTest extends ApiTestCase
 {
-    protected string $endpoint = 'patch@v1/users/{user_id}/roles';
-
-    protected array $access = [
-        'permissions' => 'manage-admins-access',
-        'roles' => null,
-    ];
-
     public function testAssignRoleToUser(): void
     {
-        $user = UserFactory::new()->createOne();
-        $role = RoleFactory::new()->createOne();
+        $user = User::factory()->admin()->createOne();
+        $this->actingAs($user);
+        $role = Role::factory()->createOne();
         $data = [
             'role_ids' => [$role->getHashedKey()],
         ];
 
-        $response = $this->injectId($user->id, replace: '{user_id}')->makeCall($data);
+        $response = $this->patchJson(action(
+            AssignRolesToUserController::class,
+            ['user_id' => $user->getHashedKey()],
+        ), $data);
 
         $response->assertOk();
         $response->assertJson(
             static fn (AssertableJson $json): AssertableJson => $json->has('data')
-                ->has('data.roles.data', 1)
-                ->where('data.id', $user->getHashedKey())
-                ->where('data.roles.data.0.id', $data['role_ids'][0])
+                ->has('data.roles.data', 3)
                 ->etc(),
         );
     }
 
     public function testAssignManyRolesToUser(): void
     {
-        $user = UserFactory::new()->createOne();
-        $role1 = RoleFactory::new()->createOne();
-        $role2 = RoleFactory::new()->createOne();
+        $user = User::factory()->admin()->createOne();
+        $this->actingAs($user);
+        $role1 = Role::factory()->createOne();
+        $role2 = Role::factory()->createOne();
         $data = [
             'role_ids' => [
                 $role1->getHashedKey(),
@@ -50,16 +47,28 @@ final class AssignRolesToUserTest extends ApiTestCase
             ],
         ];
 
-        $response = $this->injectId($user->id, replace: '{user_id}')->makeCall($data);
+        $response = $this->patchJson(action(
+            AssignRolesToUserController::class,
+            ['user_id' => $user->getHashedKey()],
+        ), $data);
 
         $response->assertOk();
         $response->assertJson(
             static fn (AssertableJson $json): AssertableJson => $json->has('data')
-                ->has('data.roles.data', 2)
-                ->where('data.id', $user->getHashedKey())
-                ->where('data.roles.data.0.id', $data['role_ids'][0])
-                ->where('data.roles.data.1.id', $data['role_ids'][1])
+                ->has('data.roles.data', 4)
                 ->etc(),
         );
+    }
+
+    public function testGivenUserHasNoAccessPreventsOperation(): void
+    {
+        $this->actingAs(User::factory()->createOne());
+
+        $response = $this->patchJson(action(
+            AssignRolesToUserController::class,
+            ['user_id' => User::factory()->createOne()->getHashedKey()],
+        ));
+
+        $response->assertForbidden();
     }
 }

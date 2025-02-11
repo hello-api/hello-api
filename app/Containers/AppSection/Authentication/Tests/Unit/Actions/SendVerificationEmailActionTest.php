@@ -6,7 +6,7 @@ use App\Containers\AppSection\Authentication\Actions\SendVerificationEmailAction
 use App\Containers\AppSection\Authentication\Tasks\SendVerificationEmailTask;
 use App\Containers\AppSection\Authentication\Tests\UnitTestCase;
 use App\Containers\AppSection\Authentication\UI\API\Requests\SendVerificationEmailRequest;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(SendVerificationEmailAction::class)]
@@ -18,7 +18,7 @@ class SendVerificationEmailActionTest extends UnitTestCase
         $action = app(SendVerificationEmailAction::class);
         $request = SendVerificationEmailRequest::injectData([
             'verification_url' => 'http://localhost',
-        ], UserFactory::new()->createOne());
+        ], User::factory()->createOne());
         $taskSpy->expects()->run($request->user(), $request->verification_url);
 
         $action->run($request);

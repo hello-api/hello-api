@@ -20,22 +20,15 @@ final class CreateAdminActionTest extends UnitTestCase
         $admin = app(CreateAdminAction::class)->run($data);
 
         $this->assertSame($data['email'], $admin->email);
-        foreach (array_keys(config('auth.guards')) as $guardName) {
-            $this->assertTrue($admin->hasRole(config('appSection-authorization.admin_role'), $guardName));
-        }
+        $this->assertTrue($admin->isSuperAdmin());
         $this->assertNotNull($admin->email_verified_at);
     }
 
     public function testGivenInvalidDataThrowExceptionAndRollbackDB(): void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(\Error::class);
 
-        config()->set('appSection-authorization.admin_role', 'not_existing_role');
-        $data = [
-            'email' => 'ganldalf@the.grey',
-            'password' => 'youShallNotPass',
-            'name' => 'Super Admin',
-        ];
+        $data = ['name' => new class {}];
 
         $admin = app(CreateAdminAction::class)->run($data);
 

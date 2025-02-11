@@ -3,8 +3,8 @@
 namespace App\Containers\AppSection\Authorization\Tests\Unit\Actions;
 
 use App\Containers\AppSection\Authorization\Actions\RevokeRolePermissionsAction;
-use App\Containers\AppSection\Authorization\Data\Factories\PermissionFactory;
-use App\Containers\AppSection\Authorization\Data\Factories\RoleFactory;
+use App\Containers\AppSection\Authorization\Models\Permission;
+use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\AppSection\Authorization\Tests\UnitTestCase;
 use App\Containers\AppSection\Authorization\UI\API\Requests\RevokeRolePermissionsRequest;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -14,8 +14,8 @@ final class RevokeRolePermissionsActionTest extends UnitTestCase
 {
     public function testCanRevokeSinglePermission(): void
     {
-        $role = RoleFactory::new()->createOne();
-        $permissions = PermissionFactory::new()->count(3)->create();
+        $role = Role::factory()->createOne();
+        $permissions = Permission::factory()->count(3)->create();
         $role->givePermissionTo($permissions);
         $request = RevokeRolePermissionsRequest::injectData([
             'permission_ids' => [$permissions[1]->getHashedKey()],
@@ -31,8 +31,8 @@ final class RevokeRolePermissionsActionTest extends UnitTestCase
 
     public function testCanRevokeMultiplePermissions(): void
     {
-        $role = RoleFactory::new()->createOne();
-        $permissions = PermissionFactory::new()->count(3)->create();
+        $role = Role::factory()->createOne();
+        $permissions = Permission::factory()->count(3)->create();
         $role->givePermissionTo($permissions);
         $request = RevokeRolePermissionsRequest::injectData([
             'permission_ids' => [$permissions[0]->getHashedKey(), $permissions[2]->getHashedKey()],

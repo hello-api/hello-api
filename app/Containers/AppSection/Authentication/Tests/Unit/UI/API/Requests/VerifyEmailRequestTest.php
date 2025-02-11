@@ -11,14 +11,6 @@ final class VerifyEmailRequestTest extends UnitTestCase
 {
     private VerifyEmailRequest $request;
 
-    public function testAccess(): void
-    {
-        $this->assertSame([
-            'permissions' => null,
-            'roles' => null,
-        ], $this->request->getAccessArray());
-    }
-
     public function testDecode(): void
     {
         $this->assertSame([
@@ -26,23 +18,9 @@ final class VerifyEmailRequestTest extends UnitTestCase
         ], $this->request->getDecodeArray());
     }
 
-    public function testUrlParametersArray(): void
-    {
-        $this->assertSame([
-            'user_id',
-        ], $this->request->getUrlParametersArray());
-    }
-
     public function testValidationRules(): void
     {
         $this->assertSame([], $this->request->rules());
-    }
-
-    public function testAuthorizeMethodGateCall(): void
-    {
-        $request = VerifyEmailRequest::injectData([], $this->getTestingUserWithoutAccess());
-
-        $this->assertTrue($request->authorize());
     }
 
     protected function setUp(): void

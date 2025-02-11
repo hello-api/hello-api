@@ -7,14 +7,7 @@ use App\Ship\Parents\Requests\Request as ParentRequest;
 
 class LoginProxyPasswordGrantRequest extends ParentRequest
 {
-    protected array $access = [
-        'permissions' => null,
-        'roles' => null,
-    ];
-
     protected array $decode = [];
-
-    protected array $urlParameters = [];
 
     public function rules(): array
     {
@@ -27,10 +20,5 @@ class LoginProxyPasswordGrantRequest extends ParentRequest
         ];
 
         return LoginFieldParser::mergeValidationRules($rules);
-    }
-
-    public function authorize(): bool
-    {
-        return $this->hasAccess();
     }
 }

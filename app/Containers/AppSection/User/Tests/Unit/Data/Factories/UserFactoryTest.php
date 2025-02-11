@@ -13,35 +13,28 @@ final class UserFactoryTest extends UnitTestCase
 {
     public function testCanCreateUser(): void
     {
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
 
         $this->assertInstanceOf(User::class, $user);
     }
 
     public function testCanCreateAdminUser(): void
     {
-        $user = UserFactory::new()->admin()->createOne();
+        $user = User::factory()->admin()->createOne();
 
-        $this->assertTrue($user->hasRole(config('appSection-authorization.admin_role')));
+        $this->assertTrue($user->isSuperAdmin());
     }
 
     public function testCanCreateUnverifiedUser(): void
     {
-        $user = UserFactory::new()->unverified()->createOne();
+        $user = User::factory()->unverified()->createOne();
 
         $this->assertNull($user->email_verified_at);
     }
 
-    public function testCanCreateVerifiedUser(): void
-    {
-        $user = UserFactory::new()->verified()->createOne();
-
-        $this->assertNotNull($user->email_verified_at);
-    }
-
     public function testCanSetGender(): void
     {
-        $user = UserFactory::new()->gender(Gender::MALE)->createOne();
+        $user = User::factory()->gender(Gender::MALE)->createOne();
 
         $this->assertSame(Gender::MALE, $user->gender);
     }

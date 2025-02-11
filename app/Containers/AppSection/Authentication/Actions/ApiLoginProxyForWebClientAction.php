@@ -2,13 +2,12 @@
 
 namespace App\Containers\AppSection\Authentication\Actions;
 
-use Apiato\Core\Exceptions\IncorrectIdException;
 use App\Containers\AppSection\Authentication\Classes\LoginFieldParser;
-use App\Containers\AppSection\Authentication\Exceptions\LoginFailedException;
+use App\Containers\AppSection\Authentication\DataTransferObjects\AuthResult;
+use App\Containers\AppSection\Authentication\Exceptions\LoginFailed;
 use App\Containers\AppSection\Authentication\Tasks\CallOAuthServerTask;
 use App\Containers\AppSection\Authentication\Tasks\MakeRefreshTokenCookieTask;
 use App\Containers\AppSection\Authentication\UI\API\Requests\LoginProxyPasswordGrantRequest;
-use App\Containers\AppSection\Authentication\Values\AuthResult;
 use App\Ship\Parents\Actions\Action as ParentAction;
 
 class ApiLoginProxyForWebClientAction extends ParentAction
@@ -20,12 +19,12 @@ class ApiLoginProxyForWebClientAction extends ParentAction
     }
 
     /**
-     * @throws LoginFailedException
-     * @throws IncorrectIdException
+     * @throws LoginFailed
+     * @throws \Exception
      */
     public function run(LoginProxyPasswordGrantRequest $request): AuthResult
     {
-        $sanitizedData = $request->sanitizeInput([
+        $sanitizedData = $request->sanitize([
             ...array_keys(config('appSection-authentication.login.fields')),
             'password',
             'client_id' => config('appSection-authentication.clients.web.id'),
@@ -36,6 +35,7 @@ class ApiLoginProxyForWebClientAction extends ParentAction
 
         $loginFields = LoginFieldParser::extractAll($sanitizedData);
 
+        $exception = null;
         foreach ($loginFields as $loginField) {
             $sanitizedData['username'] = $loginField->value;
 
@@ -44,11 +44,12 @@ class ApiLoginProxyForWebClientAction extends ParentAction
                 $refreshTokenCookie = $this->makeRefreshTokenCookieTask->run($token->refreshToken);
 
                 return new AuthResult($token, $refreshTokenCookie);
-            } catch (LoginFailedException) {
+            } catch (LoginFailed $e) {
+                $exception = $e;
                 // try the next login field
             }
         }
 
-        throw new LoginFailedException();
+        throw $exception;
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Containers\AppSection\Authorization\Tests\Unit\UI\API\Controllers;
 
 use App\Containers\AppSection\Authorization\Actions\ListPermissionsAction;
-use App\Containers\AppSection\Authorization\Data\Factories\PermissionFactory;
+use App\Containers\AppSection\Authorization\Models\Permission;
 use App\Containers\AppSection\Authorization\Tests\UnitTestCase;
 use App\Containers\AppSection\Authorization\UI\API\Controllers\ListPermissionsController;
 use App\Containers\AppSection\Authorization\UI\API\Requests\ListPermissionsRequest;
@@ -20,7 +20,7 @@ final class ListPermissionsControllerTest extends UnitTestCase
         $actionMock = $this->mock(ListPermissionsAction::class);
         $actionMock->expects()->run()->andReturn(
             new LengthAwarePaginator(
-                PermissionFactory::new()->count(2)->create(),
+                Permission::factory()->count(2)->create(),
                 2,
                 1,
             ),

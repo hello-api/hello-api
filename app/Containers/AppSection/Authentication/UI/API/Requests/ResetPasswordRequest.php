@@ -7,14 +7,7 @@ use Illuminate\Validation\Rules\Password;
 
 class ResetPasswordRequest extends ParentRequest
 {
-    protected array $access = [
-        'permissions' => null,
-        'roles' => null,
-    ];
-
     protected array $decode = [];
-
-    protected array $urlParameters = [];
 
     public function rules(): array
     {
@@ -26,10 +19,5 @@ class ResetPasswordRequest extends ParentRequest
                 Password::default(),
             ],
         ];
-    }
-
-    public function authorize(): bool
-    {
-        return $this->hasAccess();
     }
 }

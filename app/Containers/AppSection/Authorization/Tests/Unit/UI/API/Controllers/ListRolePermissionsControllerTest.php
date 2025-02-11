@@ -3,7 +3,7 @@
 namespace App\Containers\AppSection\Authorization\Tests\Unit\UI\API\Controllers;
 
 use App\Containers\AppSection\Authorization\Actions\ListRolePermissionsAction;
-use App\Containers\AppSection\Authorization\Data\Factories\PermissionFactory;
+use App\Containers\AppSection\Authorization\Models\Permission;
 use App\Containers\AppSection\Authorization\Tests\UnitTestCase;
 use App\Containers\AppSection\Authorization\UI\API\Controllers\ListRolePermissionsController;
 use App\Containers\AppSection\Authorization\UI\API\Requests\ListRolePermissionsRequest;
@@ -17,7 +17,7 @@ final class ListRolePermissionsControllerTest extends UnitTestCase
         $controller = app(ListRolePermissionsController::class);
         $request = ListRolePermissionsRequest::injectData();
         $actionMock = $this->mock(ListRolePermissionsAction::class);
-        $actionMock->expects()->run($request)->andReturn(PermissionFactory::new()->count(2)->create());
+        $actionMock->expects()->run($request)->andReturn(Permission::factory()->count(2)->create());
 
         $controller->__invoke($request, $actionMock);
     }

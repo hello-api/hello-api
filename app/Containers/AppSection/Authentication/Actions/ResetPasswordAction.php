@@ -2,13 +2,11 @@
 
 namespace App\Containers\AppSection\Authentication\Actions;
 
-use Apiato\Core\Exceptions\IncorrectIdException;
-use App\Containers\AppSection\Authentication\Exceptions\InvalidResetPasswordTokenException;
+use App\Containers\AppSection\Authentication\Exceptions\InvalidResetPasswordToken;
 use App\Containers\AppSection\Authentication\Notifications\PasswordReset;
 use App\Containers\AppSection\Authentication\UI\API\Requests\ResetPasswordRequest;
 use App\Containers\AppSection\User\Tasks\FindUserByEmailTask;
-use App\Ship\Exceptions\NotFoundException;
-use App\Ship\Exceptions\UpdateResourceFailedException;
+use App\Ship\Exceptions\ResourceNotFound;
 use App\Ship\Parents\Actions\Action as ParentAction;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -21,14 +19,12 @@ class ResetPasswordAction extends ParentAction
     }
 
     /**
-     * @throws InvalidResetPasswordTokenException
-     * @throws NotFoundException
-     * @throws UpdateResourceFailedException
-     * @throws IncorrectIdException
+     * @throws InvalidResetPasswordToken
+     * @throws ResourceNotFound
      */
     public function run(ResetPasswordRequest $request): void
     {
-        $sanitizedData = $request->sanitizeInput([
+        $sanitizedData = $request->sanitize([
             'email',
             'token',
             'password',
@@ -46,9 +42,9 @@ class ResetPasswordAction extends ParentAction
 
         switch ($status) {
             case Password::INVALID_TOKEN:
-                throw new InvalidResetPasswordTokenException();
+                throw InvalidResetPasswordToken::create();
             case Password::INVALID_USER:
-                throw new NotFoundException('User Not Found.');
+                throw ResourceNotFound::create('User');
             default:
                 $user = $this->findUserByEmailTask->run($sanitizedData['email']);
                 $user->notify(new PasswordReset());

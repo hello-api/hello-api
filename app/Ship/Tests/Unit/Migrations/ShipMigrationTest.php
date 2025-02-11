@@ -8,52 +8,89 @@ use PHPUnit\Framework\Attributes\CoversNothing;
 #[CoversNothing]
 final class ShipMigrationTest extends ShipTestCase
 {
-    public function testJobsTableHasExpectedColumns(): void
+    public function testCacheTableHasExpectedColumns(): void
     {
-        $table = 'jobs';
         $columns = [
-            'id' => 'bigint',
-            'queue' => 'string',
-            'payload' => 'text',
-            'attempts' => 'smallint',
-            'reserved_at' => 'integer',
-            'available_at' => 'integer',
-            'created_at' => 'integer',
+            'key' => 'varchar',
+            'value' => 'text',
+            'expiration' => 'int4',
         ];
 
-        $this->assertDatabaseTable($table, $columns);
+        $this->assertDatabaseTable('cache', $columns);
+    }
+
+    public function testCacheLocksTableHasExpectedColumns(): void
+    {
+        $columns = [
+            'key' => 'varchar',
+            'owner' => 'varchar',
+            'expiration' => 'int4',
+        ];
+
+        $this->assertDatabaseTable('cache_locks', $columns);
+    }
+
+    public function testJobsTableHasExpectedColumns(): void
+    {
+        $columns = [
+            'id' => 'int8',
+            'queue' => 'varchar',
+            'payload' => 'text',
+            'attempts' => 'int2',
+            'reserved_at' => 'int4',
+            'available_at' => 'int4',
+            'created_at' => 'int4',
+        ];
+
+        $this->assertDatabaseTable('jobs', $columns);
+    }
+
+    public function testJobBatchesTableHasExpectedColumns(): void
+    {
+        $columns = [
+            'id' => 'varchar',
+            'name' => 'varchar',
+            'total_jobs' => 'int4',
+            'pending_jobs' => 'int4',
+            'failed_jobs' => 'int4',
+            'failed_job_ids' => 'text',
+            'options' => 'text',
+            'cancelled_at' => 'int4',
+            'created_at' => 'int4',
+            'finished_at' => 'int4',
+        ];
+
+        $this->assertDatabaseTable('job_batches', $columns);
     }
 
     public function testFailedJobsTableHasExpectedColumns(): void
     {
-        $table = 'failed_jobs';
         $columns = [
-            'id' => 'bigint',
+            'id' => 'int8',
             'connection' => 'text',
             'queue' => 'text',
             'payload' => 'text',
             'exception' => 'text',
-            'failed_at' => 'datetime',
-            'uuid' => 'string',
+            'failed_at' => 'timestamp',
+            'uuid' => 'varchar',
         ];
 
-        $this->assertDatabaseTable($table, $columns);
+        $this->assertDatabaseTable('failed_jobs', $columns);
     }
 
     public function testNotificationsTableHasExpectedColumns(): void
     {
-        $table = 'notifications';
         $columns = [
-            'id' => 'guid',
-            'type' => 'string',
-            'notifiable_id' => 'bigint',
-            'notifiable_type' => 'string',
+            'id' => 'uuid',
+            'type' => 'varchar',
+            'notifiable_id' => 'int8',
+            'notifiable_type' => 'varchar',
             'data' => 'text',
-            'read_at' => 'datetime',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
+            'read_at' => 'timestamp',
+            'created_at' => 'timestamp',
+            'updated_at' => 'timestamp',
         ];
 
-        $this->assertDatabaseTable($table, $columns);
+        $this->assertDatabaseTable('notifications', $columns);
     }
 }

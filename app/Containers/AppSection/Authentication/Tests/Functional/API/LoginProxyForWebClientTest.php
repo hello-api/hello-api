@@ -3,13 +3,20 @@
 namespace App\Containers\AppSection\Authentication\Tests\Functional\API;
 
 use App\Containers\AppSection\Authentication\Tests\Functional\ApiTestCase;
+use App\Containers\AppSection\Authentication\UI\API\Controllers\LoginProxyForWebClientController;
+use App\Containers\AppSection\User\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
 final class LoginProxyForWebClientTest extends ApiTestCase
 {
-    protected string $endpoint = 'post@v1/clients/web/login';
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->setupPasswordGrantClient();
+    }
 
     public function testProxyLogin(): void
     {
@@ -17,9 +24,9 @@ final class LoginProxyForWebClientTest extends ApiTestCase
             'email' => 'gandalf@the.grey',
             'password' => 'youShallNotPass',
         ];
-        $this->getTestingUser($data);
+        User::factory()->createOne($data);
 
-        $response = $this->makeCall($data);
+        $response = $this->postJson(action(LoginProxyForWebClientController::class), $data);
 
         $response->assertOk();
         $response->assertJson(
@@ -38,22 +45,21 @@ final class LoginProxyForWebClientTest extends ApiTestCase
 
     public function testLoginWithNameAttribute(): void
     {
-        $data = [
+        User::factory()->createOne([
             'email' => 'gandalf@the.grey',
             'password' => 'youShallNotPass',
             'name' => 'username',
-        ];
-        $this->getTestingUser($data);
+        ]);
         $this->setLoginAttributes([
             'email' => [],
             'name' => [],
         ]);
-        $request = [
+        $data = [
             'password' => 'youShallNotPass',
             'name' => 'username',
         ];
 
-        $response = $this->makeCall($request);
+        $response = $this->postJson(action(LoginProxyForWebClientController::class), $data);
 
         $response->assertOk();
     }
@@ -72,7 +78,7 @@ final class LoginProxyForWebClientTest extends ApiTestCase
             'password' => 'youShallNotPass',
         ];
 
-        $response = $this->makeCall($data);
+        $response = $this->postJson(action(LoginProxyForWebClientController::class), $data);
 
         $response->assertUnprocessable();
         $response->assertJson(fn (AssertableJson $json): AssertableJson => $json->has(
@@ -92,7 +98,7 @@ final class LoginProxyForWebClientTest extends ApiTestCase
             'password' => 'youShallNotPass',
         ];
 
-        $response = $this->makeCall($data);
+        $response = $this->postJson(action(LoginProxyForWebClientController::class), $data);
 
         $response->assertUnprocessable();
         $response->assertJson(fn (AssertableJson $json): AssertableJson => $json->has(
@@ -103,15 +109,15 @@ final class LoginProxyForWebClientTest extends ApiTestCase
         )->etc());
     }
 
-    public function testGivenWrongCredentialThrow422(): void
+    public function testGivenWrongCredentialThrowException(): void
     {
         $data = [
             'email' => 'ganldalf@the.grey',
             'password' => 'youShallNotPass',
         ];
 
-        $response = $this->makeCall($data);
+        $response = $this->postJson(action(LoginProxyForWebClientController::class), $data);
 
-        $response->assertUnauthorized();
+        $response->assertUnprocessable();
     }
 }

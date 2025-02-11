@@ -40,7 +40,7 @@ final class VerifyEmail extends ParentNotification implements ShouldQueue
 
         return $this->verificationUrl . '?url=' . URL::temporarySignedRoute(
             'verification.verify',
-            now()->addMinutes(config('appSection-authentication.email_verification_link_expiration_time_in_minute')),
+            now()->addMinutes((int) config('appSection-authentication.email_verification_link_expiration_time_in_minute')),
             compact('user_id', 'hash'),
         );
     }

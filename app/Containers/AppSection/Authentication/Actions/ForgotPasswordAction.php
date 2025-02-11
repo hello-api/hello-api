@@ -2,13 +2,11 @@
 
 namespace App\Containers\AppSection\Authentication\Actions;
 
-use Apiato\Core\Exceptions\IncorrectIdException;
 use App\Containers\AppSection\Authentication\Mails\ForgotPassword;
 use App\Containers\AppSection\Authentication\Tasks\CreatePasswordResetTokenTask;
 use App\Containers\AppSection\Authentication\UI\API\Requests\ForgotPasswordRequest;
 use App\Containers\AppSection\User\Tasks\FindUserByEmailTask;
 use App\Ship\Parents\Actions\Action as ParentAction;
-use App\Ship\Parents\Exceptions\Exception;
 use Illuminate\Support\Facades\Mail;
 
 class ForgotPasswordAction extends ParentAction
@@ -19,23 +17,21 @@ class ForgotPasswordAction extends ParentAction
     ) {
     }
 
-    /**
-     * @throws IncorrectIdException
-     */
     public function run(ForgotPasswordRequest $request): bool
     {
-        $sanitizedData = $request->sanitizeInput([
+        $sanitizedData = $request->sanitize([
             'email',
             'reseturl',
         ]);
 
-        // It's a good idea to DON'T say if the user email is valid or not
-        // (to avoid brute force checking of user email existing).
+        // To prevent email enumeration we always return true even if the user does not exist,
+        // So the client can't tell if the user exists or not based on the response
         try {
             $user = $this->findUserByEmailTask->run($sanitizedData['email']);
             $token = $this->createPasswordResetTokenTask->run($user);
             Mail::send(new ForgotPassword($user, $token, $sanitizedData['reseturl']));
-        } catch (Exception) {
+        } catch (\Throwable) {
+            return true;
         }
 
         return true;

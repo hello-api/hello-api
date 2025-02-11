@@ -9,8 +9,17 @@ use App\Ship\Parents\Policies\Policy as ParentPolicy;
 class UserPolicy extends ParentPolicy
 {
     public function __construct(
-        private readonly UserRepository $repository,
+        private readonly UserRepository $userRepository,
     ) {
+    }
+
+    public function before(User $user): bool|null
+    {
+        if ($user->isSuperAdmin()) {
+            return true;
+        }
+
+        return null;
     }
 
     public function delete(): bool
@@ -18,9 +27,11 @@ class UserPolicy extends ParentPolicy
         return false;
     }
 
-    public function show(): bool
+    public function show(User $user, int $userId): bool
     {
-        return false;
+        $entity = $this->userRepository->findById($userId);
+
+        return $user->is($entity);
     }
 
     public function index(): bool
@@ -30,7 +41,7 @@ class UserPolicy extends ParentPolicy
 
     public function update(User $user, int $userId): bool
     {
-        $entity = $this->repository->findById($userId);
+        $entity = $this->userRepository->findById($userId);
 
         return $user->is($entity);
     }

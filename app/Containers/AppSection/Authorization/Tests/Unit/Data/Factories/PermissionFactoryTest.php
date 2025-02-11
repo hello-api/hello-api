@@ -13,14 +13,14 @@ final class PermissionFactoryTest extends UnitTestCase
 {
     public function testCanCreatePermission(): void
     {
-        $permission = PermissionFactory::new()->createOne();
+        $permission = Permission::factory()->createOne();
 
         $this->assertInstanceOf(Permission::class, $permission);
     }
 
     public function testCanSetGuard(): void
     {
-        $permission = PermissionFactory::new()->withGuard(AuthGuard::API->value)->createOne();
+        $permission = Permission::factory()->withGuard(AuthGuard::API->value)->createOne();
 
         $this->assertSame(AuthGuard::API->value, $permission->guard_name);
     }

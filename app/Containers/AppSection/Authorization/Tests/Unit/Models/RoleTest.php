@@ -2,8 +2,7 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Unit\Models;
 
-use Apiato\Core\Traits\ModelTrait;
-use App\Containers\AppSection\Authorization\Data\Factories\RoleFactory;
+use Apiato\Abstract\Models\ApiatoIntegration;
 use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\AppSection\Authorization\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -13,20 +12,12 @@ final class RoleTest extends UnitTestCase
 {
     public function testUsesCorrectTraits(): void
     {
-        $this->assertContains(ModelTrait::class, class_uses_recursive(Role::class));
-    }
-
-    public function testUsesCorrectGuard(): void
-    {
-        $user = RoleFactory::new()->createOne();
-        $guard = 'api';
-
-        $this->assertSame($guard, $this->getInaccessiblePropertyValue($user, 'guard_name'));
+        $this->assertContains(ApiatoIntegration::class, class_uses_recursive(Role::class));
     }
 
     public function testHasCorrectFillableFields(): void
     {
-        $role = RoleFactory::new()->createOne();
+        $role = Role::factory()->createOne();
         $fillables = [
             'name',
             'guard_name',
@@ -41,7 +32,7 @@ final class RoleTest extends UnitTestCase
 
     public function testUsesCorrectTable(): void
     {
-        $role = RoleFactory::new()->createOne();
+        $role = Role::factory()->createOne();
         $table = 'roles';
 
         $this->assertSame($table, $role->getTable());
@@ -49,8 +40,8 @@ final class RoleTest extends UnitTestCase
 
     public function testHasCorrectResourceKey(): void
     {
-        $user = RoleFactory::new()->createOne();
+        $role = Role::factory()->createOne();
 
-        $this->assertSame('Role', $user->getResourceKey());
+        $this->assertSame('Role', $role->getResourceKey());
     }
 }

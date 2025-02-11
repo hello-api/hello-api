@@ -11,34 +11,14 @@ final class LogoutRequestTest extends UnitTestCase
 {
     private LogoutRequest $request;
 
-    public function testAccess(): void
-    {
-        $this->assertSame([
-            'permissions' => null,
-            'roles' => null,
-        ], $this->request->getAccessArray());
-    }
-
     public function testDecode(): void
     {
         $this->assertSame([], $this->request->getDecodeArray());
     }
 
-    public function testUrlParametersArray(): void
-    {
-        $this->assertSame([], $this->request->getUrlParametersArray());
-    }
-
     public function testValidationRules(): void
     {
         $this->assertSame([], $this->request->rules());
-    }
-
-    public function testAuthorizeMethodGateCall(): void
-    {
-        $request = LogoutRequest::injectData([], $this->getTestingUserWithoutAccess());
-
-        $this->assertTrue($request->authorize());
     }
 
     protected function setUp(): void

@@ -11,9 +11,6 @@ class UpdateUserController extends ApiController
 {
     public function __invoke(UpdateUserRequest $request, UpdateUserAction $action): array
     {
-        $request->mapInput([
-            'new_password' => 'password',
-        ]);
         $user = $action->run($request);
 
         return $this->transform($user, UserTransformer::class);

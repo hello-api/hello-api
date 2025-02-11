@@ -3,25 +3,27 @@
 namespace App\Containers\AppSection\Authentication\Tests\Functional\API;
 
 use App\Containers\AppSection\Authentication\Tests\Functional\ApiTestCase;
+use App\Containers\AppSection\Authentication\UI\API\Controllers\LoginProxyForWebClientController;
+use App\Containers\AppSection\Authentication\UI\API\Controllers\RefreshProxyForWebClientController;
+use App\Containers\AppSection\User\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
 final class RefreshProxyForWebClientTest extends ApiTestCase
 {
-    protected string $endpoint = 'post@v1/clients/web/refresh';
-
-    private array $data;
-
     public function testProxyRefresh(): void
     {
-        $loginResponse = $this->endpoint('post@v1/clients/web/login')->makeCall($this->data);
-        $refreshToken = json_decode($loginResponse->getContent(), true, 512, JSON_THROW_ON_ERROR)['data']['refresh_token'];
         $data = [
-            'refresh_token' => $refreshToken,
+            'email' => 'gandalf@the.grey',
+            'password' => 'youShallNotPass',
         ];
+        $this->actingAs(User::factory()->createOne($data), 'web');
 
-        $response = $this->endpoint($this->endpoint)->makeCall($data);
+        $loginResponse = $this->postJson(action(LoginProxyForWebClientController::class), $data);
+        $response = $this->postJson(action(RefreshProxyForWebClientController::class), [
+            'refresh_token' => $loginResponse['data']['refresh_token'],
+        ]);
 
         $response->assertOk();
         $response->assertJson(
@@ -41,10 +43,10 @@ final class RefreshProxyForWebClientTest extends ApiTestCase
     public function testGivenRefreshTokenPassedAsParameterItShouldBeString(): void
     {
         $data = [
-            'refresh_token' => '', // empty equals `not string`
+            'refresh_token' => '',
         ];
 
-        $response = $this->makeCall($data);
+        $response = $this->postJson(action(RefreshProxyForWebClientController::class), $data);
 
         $response->assertUnprocessable();
         $response->assertJson(
@@ -58,12 +60,6 @@ final class RefreshProxyForWebClientTest extends ApiTestCase
     {
         parent::setUp();
 
-        $this->data = [
-            'email' => 'gandalf@the.grey',
-            'password' => 'youShallNotPass',
-        ];
-
-        $this->getTestingUser($this->data);
-        $this->actingAs($this->testingUser, 'web');
+        $this->setupPasswordGrantClient();
     }
 }

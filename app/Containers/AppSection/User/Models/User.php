@@ -3,6 +3,7 @@
 namespace App\Containers\AppSection\User\Models;
 
 use App\Containers\AppSection\Authentication\Notifications\VerifyEmail;
+use App\Containers\AppSection\Authorization\Enums\Role as RoleEnum;
 use App\Containers\AppSection\User\Data\Collections\UserCollection;
 use App\Containers\AppSection\User\Enums\Gender;
 use App\Ship\Contracts\MustVerifyEmail;
@@ -61,9 +62,15 @@ class User extends ParentUserModel implements MustVerifyEmail
         return $query->first();
     }
 
-    public function hasAdminRole(): bool
+    public function isSuperAdmin(): bool
     {
-        return $this->hasRole(config('appSection-authorization.admin_role'));
+        foreach (array_keys(config('auth.guards')) as $guard) {
+            if (!$this->hasRole(RoleEnum::SUPER_ADMIN, $guard)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     protected function email(): Attribute

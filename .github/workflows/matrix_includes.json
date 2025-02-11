@@ -1,0 +1,38 @@
+[
+    {
+        "runs_on": "ubuntu-latest",
+        "runOn":"master",
+        "php_version":"8.2",
+        "php_unit_version":  "phpunit:11.*"
+    },
+    {
+        "runs_on": "ubuntu-latest",
+        "runOn":"master",
+        "php_version":"8.3",
+        "php_unit_version":  "phpunit:11.*"
+    },
+    {
+        "runs_on": "ubuntu-latest",
+        "runOn":"13.x",
+        "php_version":"8.2",
+        "php_unit_version":  "phpunit:11.*"
+    },
+    {
+        "runs_on": "ubuntu-latest",
+        "runOn":"13.x",
+        "php_version":"8.3",
+        "php_unit_version":  "phpunit:11.*"
+    },
+    {
+        "runs_on": "ubuntu-latest",
+        "runOn":"12.x",
+        "php_version":"8.1",
+        "php_unit_version": "phpunit:10.*"
+    },
+    {
+        "runs_on": "ubuntu-latest",
+        "runOn":"12.x",
+        "php_version":"8.2",
+        "php_unit_version": "phpunit:10.*"
+    }
+]

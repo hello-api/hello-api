@@ -2,32 +2,28 @@
 
 namespace App\Containers\AppSection\User\Tests\Functional\API;
 
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
 use App\Containers\AppSection\User\Enums\Gender;
+use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Tests\Functional\ApiTestCase;
+use App\Containers\AppSection\User\UI\API\Controllers\UpdateUserController;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
 final class UpdateUserTest extends ApiTestCase
 {
-    protected string $endpoint = 'patch@v1/users/{user_id}';
-
-    protected array $access = [
-        'permissions' => null,
-        'roles' => null,
-    ];
-
     public function testCanUpdateAsOwner(): void
     {
-        $this->testingUser = UserFactory::new()->createOne([
+        $user = User::factory()->createOne([
             'name' => 'He who must not be named',
             'gender' => Gender::FEMALE,
             'password' => 'Av@dakedavra!',
         ]);
+        $this->actingAs($user);
         $data = [
             'name' => 'Updated Name',
             'gender' => Gender::MALE->value,
@@ -37,7 +33,7 @@ final class UpdateUserTest extends ApiTestCase
             'new_password_confirmation' => 'updated#Password111',
         ];
 
-        $response = $this->injectId($this->testingUser->id, replace: '{user_id}')->makeCall($data);
+        $response = $this->patchJson(URL::action(UpdateUserController::class, $user->getHashedKey()), $data);
 
         $response->assertOk();
         $response->assertJson(
@@ -45,7 +41,7 @@ final class UpdateUserTest extends ApiTestCase
                 'data',
                 fn (AssertableJson $json): AssertableJson => $json
                     ->where('object', 'User')
-                    ->where('email', $this->testingUser->email)
+                    ->where('email', $user->email)
                     ->where('name', $data['name'])
                     ->where('gender', $data['gender'])
                     ->where('birth', static fn ($birth) => CarbonImmutable::parse($data['birth'])->isSameDay($birth))
@@ -53,6 +49,15 @@ final class UpdateUserTest extends ApiTestCase
                     ->etc(),
             )->etc(),
         );
-        $this->assertTrue(Hash::check($data['new_password'], $this->testingUser->refresh()->password));
+        $this->assertTrue(Hash::check($data['new_password'], $user->refresh()->password));
+    }
+
+    public function testGivenUserHasNoAccessPreventsOperation(): void
+    {
+        $this->actingAs(User::factory()->createOne());
+
+        $response = $this->patchJson(URL::action(UpdateUserController::class, User::factory()->createOne()->getHashedKey()));
+
+        $response->assertForbidden();
     }
 }

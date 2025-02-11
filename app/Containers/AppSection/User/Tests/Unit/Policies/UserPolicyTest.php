@@ -2,7 +2,7 @@
 
 namespace App\Containers\AppSection\User\Tests\Unit\Policies;
 
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Policies\UserPolicy;
 use App\Containers\AppSection\User\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -20,8 +20,9 @@ final class UserPolicyTest extends UnitTestCase
     public function testCanShowUserOnlyIfAdmin(): void
     {
         $policy = app(UserPolicy::class);
+        $user = User::factory()->createOne();
 
-        $this->assertFalse($policy->show());
+        $this->assertTrue($policy->show($user, $user->id));
     }
 
     public function testCanIndexUsersOnlyIfAdmin(): void
@@ -34,7 +35,7 @@ final class UserPolicyTest extends UnitTestCase
     public function testCanUpdateUserAsOwner(): void
     {
         $policy = app(UserPolicy::class);
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
 
         $this->assertTrue($policy->update($user, $user->id));
     }

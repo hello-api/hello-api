@@ -2,7 +2,7 @@
 
 namespace App\Containers\AppSection\User\Tests\Unit\Notifications;
 
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Notifications\PasswordUpdatedNotification;
 use App\Containers\AppSection\User\Tests\UnitTestCase;
 use Illuminate\Support\Facades\Notification;
@@ -15,7 +15,7 @@ final class PasswordUpdatedNotificationTest extends UnitTestCase
     {
         Notification::fake();
         Notification::assertNothingSent();
-        $user = UserFactory::new()->createOne();
+        $user = User::factory()->createOne();
 
         $user->notify(new PasswordUpdatedNotification());
 

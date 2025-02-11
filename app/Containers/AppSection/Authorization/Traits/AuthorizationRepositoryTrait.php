@@ -6,6 +6,7 @@ use App\Containers\AppSection\Authorization\Data\Criterias\WhereGuardCriteria;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Prettus\Repository\Exceptions\RepositoryException;
 
+// TODO
 trait AuthorizationRepositoryTrait
 {
     /**

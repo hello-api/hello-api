@@ -6,6 +6,7 @@ use App\Containers\AppSection\Authentication\Actions\ForgotPasswordAction;
 use App\Containers\AppSection\Authentication\Mails\ForgotPassword;
 use App\Containers\AppSection\Authentication\Tests\UnitTestCase;
 use App\Containers\AppSection\Authentication\UI\API\Requests\ForgotPasswordRequest;
+use App\Containers\AppSection\User\Models\User;
 use Illuminate\Support\Facades\Mail;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -15,7 +16,7 @@ final class ForgotPasswordActionTest extends UnitTestCase
     public function testIfUserExistsShouldReturnTrue(): void
     {
         Mail::fake();
-        $user = $this->getTestingUser();
+        $user = User::factory()->createOne();
         $data = [
             'email' => $user->email,
             'reseturl' => 'http://localhost',
@@ -28,7 +29,7 @@ final class ForgotPasswordActionTest extends UnitTestCase
         Mail::assertQueued(ForgotPassword::class);
     }
 
-    public function testIfUserNotExistsShouldTrue(): void
+    public function testAlwaysReturnsTrue(): void
     {
         Mail::fake();
         $data = [

@@ -2,31 +2,47 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Functional\API;
 
-use App\Containers\AppSection\Authorization\Data\Factories\PermissionFactory;
+use App\Containers\AppSection\Authorization\Models\Permission;
 use App\Containers\AppSection\Authorization\Tests\Functional\ApiTestCase;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\Authorization\UI\API\Controllers\ListUserPermissionsController;
+use App\Containers\AppSection\User\Models\User;
+use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
 final class ListUserPermissionsTest extends ApiTestCase
 {
-    protected string $endpoint = 'get@v1/users/{user_id}/permissions';
-
-    protected array $access = [
-        'permissions' => 'manage-permissions',
-        'roles' => null,
-    ];
-
     public function testGetUserPermissions(): void
     {
-        $user = UserFactory::new()->createOne();
-        $permission = PermissionFactory::new()->createOne();
+        $this->actingAs(User::factory()->admin()->createOne());
+        $user = User::factory()->createOne();
+        $permission = Permission::factory()->createOne();
         $user->givePermissionTo([$permission]);
 
-        $response = $this->injectId($user->id, replace: '{user_id}')->makeCall();
+        $response = $this->getJson(action(
+            ListUserPermissionsController::class,
+            ['user_id' => $user->getHashedKey()],
+        ));
 
         $response->assertOk();
-        $responseContent = $this->getResponseContentObject();
-        $this->assertSame($permission->name, $responseContent->data[0]->name);
+        $response->assertJson(
+            static fn (AssertableJson $json) => $json->has(
+                'data',
+                static fn (AssertableJson $json) => $json->where('0.name', $permission->name)
+                ->etc(),
+            )->etc(),
+        );
+    }
+
+    public function testGivenUserHasNoAccessPreventsOperation(): void
+    {
+        $this->actingAs(User::factory()->createOne());
+
+        $response = $this->getJson(action(
+            ListUserPermissionsController::class,
+            ['user_id' => User::factory()->createOne()->getHashedKey()],
+        ));
+
+        $response->assertForbidden();
     }
 }

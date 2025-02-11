@@ -2,20 +2,12 @@
 
 namespace App\Containers\AppSection\Authorization\UI\API\Requests;
 
+use App\Containers\AppSection\Authorization\Models\Permission;
 use App\Ship\Parents\Requests\Request as ParentRequest;
 
 class ListRolePermissionsRequest extends ParentRequest
 {
-    protected array $access = [
-        'permissions' => 'manage-roles',
-        'roles' => null,
-    ];
-
     protected array $decode = [
-        'role_id',
-    ];
-
-    protected array $urlParameters = [
         'role_id',
     ];
 
@@ -26,6 +18,6 @@ class ListRolePermissionsRequest extends ParentRequest
 
     public function authorize(): bool
     {
-        return $this->hasAccess();
+        return $this->user()->can('viewAny', Permission::class);
     }
 }

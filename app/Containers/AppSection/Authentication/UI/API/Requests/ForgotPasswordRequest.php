@@ -7,14 +7,7 @@ use Illuminate\Validation\Rule;
 
 class ForgotPasswordRequest extends ParentRequest
 {
-    protected array $access = [
-        'permissions' => null,
-        'roles' => null,
-    ];
-
     protected array $decode = [];
-
-    protected array $urlParameters = [];
 
     public function rules(): array
     {
@@ -25,10 +18,5 @@ class ForgotPasswordRequest extends ParentRequest
                 Rule::in(config('appSection-authentication.allowed-reset-password-urls')),
             ],
         ];
-    }
-
-    public function authorize(): bool
-    {
-        return $this->hasAccess();
     }
 }

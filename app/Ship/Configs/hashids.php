@@ -1,14 +1,5 @@
 <?php
 
-/**
- * Copyright (c) Vincent Klaiber.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * @see https://github.com/vinkla/laravel-hashids
- */
-
 return [
     /*
     |--------------------------------------------------------------------------
@@ -37,7 +28,7 @@ return [
     'connections' => [
         'main' => [
             'salt' => (string) env('HASH_ID_KEY', env('APP_KEY')),
-            'length' => (int) env('HASH_ID_LENGTH', 32),
+            'length' => (int) env('HASH_ID_LENGTH', 16),
             'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
         ],
 

@@ -2,9 +2,11 @@
 
 namespace App\Containers\AppSection\User\Data\Factories;
 
+use App\Containers\AppSection\Authorization\Data\Repositories\RoleRepository;
 use App\Containers\AppSection\User\Enums\Gender;
 use App\Containers\AppSection\User\Models\User;
 use App\Ship\Parents\Factories\Factory as ParentFactory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
@@ -14,6 +16,7 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends ParentFactory
 {
+    protected static string|null $password;
     /** @var class-string<TModel> */
     protected $model = User::class;
 
@@ -22,7 +25,7 @@ class UserFactory extends ParentFactory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'password' => 'password',
+            'password' => static::$password ??= Hash::make('password'),
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),
             'gender' => fake()->randomElement(['male', 'female', 'unspecified']),
@@ -33,32 +36,21 @@ class UserFactory extends ParentFactory
     public function admin(): static
     {
         return $this->afterCreating(function (User $user) {
-            $user->assignRole(config('appSection-authorization.admin_role'));
+            app(RoleRepository::class)->makeSuperAdmin($user);
         });
     }
 
     public function unverified(): static
     {
-        return $this->state(function (array $attributes) {
-            return [
-                'email_verified_at' => null,
-            ];
-        });
-    }
-
-    public function verified(): static
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'email_verified_at' => now(),
-            ];
-        });
+        return $this->state(fn (array $attributes) => [
+            'email_verified_at' => null,
+        ]);
     }
 
     public function gender(Gender $gender): static
     {
-        return $this->state(function (array $attributes) use ($gender) {
-            return compact('gender');
-        });
+        return $this->state(fn (array $attributes) => [
+            'gender' => $gender,
+        ]);
     }
 }

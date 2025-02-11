@@ -11,14 +11,6 @@ final class ListUserPermissionsRequestTest extends UnitTestCase
 {
     private ListUserPermissionsRequest $request;
 
-    public function testAccess(): void
-    {
-        $this->assertSame([
-            'permissions' => 'manage-permissions',
-            'roles' => null,
-        ], $this->request->getAccessArray());
-    }
-
     public function testDecode(): void
     {
         $this->assertSame([
@@ -26,26 +18,11 @@ final class ListUserPermissionsRequestTest extends UnitTestCase
         ], $this->request->getDecodeArray());
     }
 
-    public function testUrlParametersArray(): void
-    {
-        $this->assertSame([
-            'user_id',
-        ], $this->request->getUrlParametersArray());
-    }
-
     public function testValidationRules(): void
     {
         $rules = $this->request->rules();
 
         $this->assertSame([], $rules);
-    }
-
-    public function testAuthorizeMethodGateCall(): void
-    {
-        $user = $this->getTestingUser(access: ['permissions' => 'manage-permissions']);
-        $request = ListUserPermissionsRequest::injectData([], $user)->withUrlParameters(['user_id' => $user->id]);
-
-        $this->assertTrue($request->authorize());
     }
 
     protected function setUp(): void

@@ -3,10 +3,10 @@
 namespace App\Containers\AppSection\Authentication\Tests\Unit\UI\API\Controllers;
 
 use App\Containers\AppSection\Authentication\Actions\RefreshProxyForWebClientAction;
+use App\Containers\AppSection\Authentication\DataTransferObjects\AuthResult;
 use App\Containers\AppSection\Authentication\Tests\UnitTestCase;
 use App\Containers\AppSection\Authentication\UI\API\Controllers\RefreshProxyForWebClientController;
 use App\Containers\AppSection\Authentication\UI\API\Requests\RefreshProxyRequest;
-use App\Containers\AppSection\Authentication\Values\AuthResult;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(RefreshProxyForWebClientController::class)]

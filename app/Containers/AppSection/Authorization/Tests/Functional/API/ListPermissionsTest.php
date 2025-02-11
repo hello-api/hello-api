@@ -2,25 +2,38 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Functional\API;
 
+use App\Containers\AppSection\Authorization\Models\Permission;
 use App\Containers\AppSection\Authorization\Tests\Functional\ApiTestCase;
+use App\Containers\AppSection\Authorization\UI\API\Controllers\ListPermissionsController;
+use App\Containers\AppSection\User\Models\User;
+use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
 final class ListPermissionsTest extends ApiTestCase
 {
-    protected string $endpoint = 'get@v1/permissions';
-
-    protected array $access = [
-        'permissions' => 'manage-permissions',
-        'roles' => null,
-    ];
-
     public function testListPermissions(): void
     {
-        $response = $this->makeCall();
+        $this->actingAs(User::factory()->admin()->createOne());
+        Permission::factory()->count(2)->create();
+
+        $response = $this->getJson(action(ListPermissionsController::class));
 
         $response->assertOk();
-        $responseContent = $this->getResponseContentObject();
-        $this->assertNotEmpty($responseContent->data);
+        $response->assertJson(
+            static fn (AssertableJson $json) => $json->has(
+                'data',
+                2,
+            )->etc(),
+        );
+    }
+
+    public function testGivenUserHasNoAccessPreventsOperation(): void
+    {
+        $this->actingAs(User::factory()->createOne());
+
+        $response = $this->getJson(action(ListPermissionsController::class));
+
+        $response->assertForbidden();
     }
 }

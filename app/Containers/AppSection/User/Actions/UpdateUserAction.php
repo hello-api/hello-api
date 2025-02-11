@@ -2,13 +2,12 @@
 
 namespace App\Containers\AppSection\User\Actions;
 
-use Apiato\Core\Exceptions\IncorrectIdException;
 use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Tasks\UpdateUserTask;
 use App\Containers\AppSection\User\UI\API\Requests\UpdateUserRequest;
-use App\Ship\Exceptions\NotFoundException;
-use App\Ship\Exceptions\UpdateResourceFailedException;
+use App\Ship\Exceptions\ResourceNotFound;
 use App\Ship\Parents\Actions\Action as ParentAction;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 class UpdateUserAction extends ParentAction
 {
@@ -18,18 +17,18 @@ class UpdateUserAction extends ParentAction
     }
 
     /**
-     * @throws NotFoundException
-     * @throws UpdateResourceFailedException
-     * @throws IncorrectIdException
+     * @throws ResourceNotFound
+     * @throws ValidatorException
      */
     public function run(UpdateUserRequest $request): User
     {
-        $sanitizedData = $request->sanitizeInput([
+        $sanitizedData = $request->sanitize([
             'name',
             'gender',
             'birth',
             'password',
         ]);
+        $sanitizedData['password'] = $request->new_password;
 
         return $this->updateUserTask->run($request->user_id, $sanitizedData);
     }

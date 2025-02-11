@@ -2,37 +2,45 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Functional\API;
 
-use App\Containers\AppSection\Authorization\Data\Factories\PermissionFactory;
+use App\Containers\AppSection\Authorization\Models\Permission;
 use App\Containers\AppSection\Authorization\Tests\Functional\ApiTestCase;
+use App\Containers\AppSection\Authorization\UI\API\Controllers\FindPermissionByIdController;
+use App\Containers\AppSection\User\Models\User;
+use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
 final class FindPermissionByIdTest extends ApiTestCase
 {
-    protected string $endpoint = 'get@v1/permissions/{permission_id}';
-
-    protected array $access = [
-        'permissions' => 'manage-permissions',
-        'roles' => null,
-    ];
-
-    public function testFindPermissionById(): void
+    public function testCanFindPermissionById(): void
     {
-        $permissionA = PermissionFactory::new()->createOne();
+        $this->actingAs(User::factory()->admin()->createOne());
+        $permission = Permission::factory()->createOne();
 
-        $response = $this->injectId($permissionA->id, replace: '{permission_id}')->makeCall();
+        $response = $this->getJson(action(
+            FindPermissionByIdController::class,
+            ['permission_id' => $permission->getHashedKey()],
+        ));
 
         $response->assertOk();
-        $responseContent = $this->getResponseContentObject();
-        $this->assertSame($permissionA->name, $responseContent->data->name);
+        $response->assertJson(
+            static fn (AssertableJson $json) => $json->has(
+                'data',
+                static fn (AssertableJson $json) => $json->where('name', $permission->name)
+                    ->etc(),
+            )->etc(),
+        );
     }
 
-    public function testFindNonExistingPermission(): void
+    public function testGivenUserHasNoAccessPreventsOperation(): void
     {
-        $invalidId = 7777777;
+        $this->actingAs(User::factory()->createOne());
 
-        $response = $this->injectId($invalidId, replace: '{permission_id}')->makeCall();
+        $response = $this->getJson(action(
+            FindPermissionByIdController::class,
+            ['permission_id' => Permission::factory()->createOne()->getHashedKey()],
+        ));
 
-        $response->assertNotFound();
+        $response->assertForbidden();
     }
 }

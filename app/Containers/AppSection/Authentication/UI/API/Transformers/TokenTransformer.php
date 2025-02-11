@@ -2,10 +2,10 @@
 
 namespace App\Containers\AppSection\Authentication\UI\API\Transformers;
 
-use App\Containers\AppSection\Authentication\Values\Token;
+use App\Containers\AppSection\Authentication\DataTransferObjects\Token;
 use App\Ship\Parents\Transformers\Transformer as ParentTransformer;
 
-class TokenTransformer extends ParentTransformer
+final class TokenTransformer extends ParentTransformer
 {
     public function transform(Token $token): array
     {

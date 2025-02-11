@@ -2,8 +2,7 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Unit\Models;
 
-use Apiato\Core\Traits\ModelTrait;
-use App\Containers\AppSection\Authorization\Data\Factories\PermissionFactory;
+use Apiato\Abstract\Models\ApiatoIntegration;
 use App\Containers\AppSection\Authorization\Models\Permission;
 use App\Containers\AppSection\Authorization\Tests\UnitTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -13,20 +12,12 @@ final class PermissionTest extends UnitTestCase
 {
     public function testUsesCorrectTraits(): void
     {
-        $this->assertContains(ModelTrait::class, class_uses_recursive(Permission::class));
-    }
-
-    public function testUsesCorrectGuard(): void
-    {
-        $permission = PermissionFactory::new()->createOne();
-        $guard = 'api';
-
-        $this->assertSame($guard, $this->getInaccessiblePropertyValue($permission, 'guard_name'));
+        $this->assertContains(ApiatoIntegration::class, class_uses_recursive(Permission::class));
     }
 
     public function testHasCorrectFillableFields(): void
     {
-        $permission = PermissionFactory::new()->createOne();
+        $permission = Permission::factory()->createOne();
         $fillables = [
             'name',
             'guard_name',
@@ -41,7 +32,7 @@ final class PermissionTest extends UnitTestCase
 
     public function testUsesCorrectTable(): void
     {
-        $permission = PermissionFactory::new()->createOne();
+        $permission = Permission::factory()->createOne();
         $table = 'permissions';
 
         $this->assertSame($table, $permission->getTable());
@@ -49,7 +40,7 @@ final class PermissionTest extends UnitTestCase
 
     public function testHasCorrectResourceKey(): void
     {
-        $permission = PermissionFactory::new()->createOne();
+        $permission = Permission::factory()->createOne();
 
         $this->assertSame('Permission', $permission->getResourceKey());
     }

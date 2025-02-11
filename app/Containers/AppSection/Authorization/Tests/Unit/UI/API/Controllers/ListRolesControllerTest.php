@@ -3,7 +3,7 @@
 namespace App\Containers\AppSection\Authorization\Tests\Unit\UI\API\Controllers;
 
 use App\Containers\AppSection\Authorization\Actions\ListRolesAction;
-use App\Containers\AppSection\Authorization\Data\Factories\RoleFactory;
+use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\AppSection\Authorization\Tests\UnitTestCase;
 use App\Containers\AppSection\Authorization\UI\API\Controllers\ListRolesController;
 use App\Containers\AppSection\Authorization\UI\API\Requests\ListRolesRequest;
@@ -20,7 +20,7 @@ final class ListRolesControllerTest extends UnitTestCase
         $actionMock = $this->mock(ListRolesAction::class);
         $actionMock->expects()->run()->andReturn(
             new LengthAwarePaginator(
-                RoleFactory::new()->count(2)->create(),
+                Role::factory()->count(2)->create(),
                 2,
                 1,
             ),

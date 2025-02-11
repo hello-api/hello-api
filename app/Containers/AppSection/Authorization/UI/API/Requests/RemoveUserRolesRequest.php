@@ -2,22 +2,14 @@
 
 namespace App\Containers\AppSection\Authorization\UI\API\Requests;
 
+use App\Containers\AppSection\Authorization\Models\Role;
 use App\Ship\Parents\Requests\Request as ParentRequest;
 
 class RemoveUserRolesRequest extends ParentRequest
 {
-    protected array $access = [
-        'permissions' => 'manage-admins-access',
-        'roles' => null,
-    ];
-
     protected array $decode = [
         'user_id',
         'role_ids.*',
-    ];
-
-    protected array $urlParameters = [
-        'user_id',
     ];
 
     public function rules(): array
@@ -31,6 +23,6 @@ class RemoveUserRolesRequest extends ParentRequest
 
     public function authorize(): bool
     {
-        return $this->hasAccess();
+        return $this->user()->can('revoke', Role::class);
     }
 }

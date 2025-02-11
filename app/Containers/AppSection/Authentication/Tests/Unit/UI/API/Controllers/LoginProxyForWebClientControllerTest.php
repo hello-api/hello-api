@@ -3,10 +3,10 @@
 namespace App\Containers\AppSection\Authentication\Tests\Unit\UI\API\Controllers;
 
 use App\Containers\AppSection\Authentication\Actions\ApiLoginProxyForWebClientAction;
+use App\Containers\AppSection\Authentication\DataTransferObjects\AuthResult;
 use App\Containers\AppSection\Authentication\Tests\UnitTestCase;
 use App\Containers\AppSection\Authentication\UI\API\Controllers\LoginProxyForWebClientController;
 use App\Containers\AppSection\Authentication\UI\API\Requests\LoginProxyPasswordGrantRequest;
-use App\Containers\AppSection\Authentication\Values\AuthResult;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(LoginProxyForWebClientController::class)]

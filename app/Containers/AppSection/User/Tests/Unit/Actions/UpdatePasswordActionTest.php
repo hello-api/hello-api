@@ -3,7 +3,7 @@
 namespace App\Containers\AppSection\User\Tests\Unit\Actions;
 
 use App\Containers\AppSection\User\Actions\UpdatePasswordAction;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Notifications\PasswordUpdatedNotification;
 use App\Containers\AppSection\User\Tests\UnitTestCase;
 use App\Containers\AppSection\User\UI\API\Requests\UpdatePasswordRequest;
@@ -17,17 +17,18 @@ final class UpdatePasswordActionTest extends UnitTestCase
     public function testCanUpdateCurrentPassword(): void
     {
         Notification::fake();
-        $user = UserFactory::new()->createOne(['password' => 'youShallNotPass']);
+        $user = User::factory()->createOne(['password' => 'youShallNotPass']);
         $data = [
-            'user_id' => $user->id,
-            'password' => 'test',
+            'user_id' => $user->getHashedKey(),
+            'password' => 'youShallNotPass',
+            'new_password' => 'test',
         ];
-        $request = UpdatePasswordRequest::injectData($data, $user)->withUrlParameters(['user_id' => $user->id]);
+        $request = UpdatePasswordRequest::injectData($data)->withUrlParameters(['user_id' => $user->id]);
         $action = app(UpdatePasswordAction::class);
 
-        $result = $action->run($request);
+        $result = $action->run($request->user_id, $request->new_password);
 
-        $this->assertTrue(Hash::check($data['password'], $result->password));
+        $this->assertTrue(Hash::check($data['new_password'], $result->password));
         Notification::assertSentTo($user, PasswordUpdatedNotification::class);
     }
 }

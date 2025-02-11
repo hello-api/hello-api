@@ -3,6 +3,6 @@
     "description": "Authorization Container",
     "type": "apiato-container",
     "require": {
-        "spatie/laravel-permission": "^5.0"
+        "spatie/laravel-permission": "^6.0"
     }
 }

@@ -3,31 +3,24 @@
 namespace App\Containers\AppSection\Authentication\Tests\Functional\API;
 
 use App\Containers\AppSection\Authentication\Tests\Functional\ApiTestCase;
+use App\Containers\AppSection\Authentication\UI\API\Controllers\ForgotPasswordController;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
 final class ForgotPasswordTest extends ApiTestCase
 {
-    protected string $endpoint = 'post@v1/password/forgot';
-
-    protected bool $auth = false;
-
-    protected array $access = [
-        'permissions' => null,
-        'roles' => null,
-    ];
-
     public function testForgotPassword(): void
     {
-        $reseturl = 'http://somereseturl.test/yea/something';
-        config()->set('appSection-authentication.allowed-reset-password-urls', $reseturl);
+        $resetUrl = 'http://somereseturl.test/yea/something';
+        config()->set('appSection-authentication.allowed-reset-password-urls', $resetUrl);
         $data = [
             'email' => 'admin@admin.com',
-            'reseturl' => $reseturl,
+            'reseturl' => $resetUrl,
         ];
 
-        $response = $this->makeCall($data);
+        $response = $this->postJson(action(ForgotPasswordController::class), $data);
+
         $response->assertNoContent();
     }
 
@@ -41,7 +34,7 @@ final class ForgotPasswordTest extends ApiTestCase
             'reseturl' => 'http://notallowed.test/wrong',
         ];
 
-        $response = $this->makeCall($data);
+        $response = $this->postJson(action(ForgotPasswordController::class), $data);
 
         $response->assertUnprocessable();
         $response->assertJson(

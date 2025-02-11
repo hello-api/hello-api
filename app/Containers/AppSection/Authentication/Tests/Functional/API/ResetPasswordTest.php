@@ -4,33 +4,28 @@ namespace App\Containers\AppSection\Authentication\Tests\Functional\API;
 
 use App\Containers\AppSection\Authentication\Tasks\CreatePasswordResetTokenTask;
 use App\Containers\AppSection\Authentication\Tests\Functional\ApiTestCase;
+use App\Containers\AppSection\Authentication\UI\API\Controllers\ResetPasswordController;
+use App\Containers\AppSection\User\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
 final class ResetPasswordTest extends ApiTestCase
 {
-    protected string $endpoint = 'post@v1/password/reset';
-
-    protected array $access = [
-        'permissions' => null,
-        'roles' => null,
-    ];
-
     public function testResetPassword(): void
     {
-        $this->getTestingUser([
+        $user = User::factory()->createOne([
             'email' => 'ganldalf@the.grey',
             'password' => 'youShallNotPass',
         ]);
-        $token = app(CreatePasswordResetTokenTask::class)->run($this->testingUser);
+        $token = app(CreatePasswordResetTokenTask::class)->run($user);
         $data = [
-            'email' => $this->testingUser->email,
+            'email' => $user->email,
             'password' => 's3cr3tPa$$',
             'token' => $token,
         ];
 
-        $response = $this->makeCall($data);
+        $response = $this->postJson(action(ResetPasswordController::class), $data);
 
         $response->assertNoContent();
     }
@@ -41,7 +36,7 @@ final class ResetPasswordTest extends ApiTestCase
             'email' => 'missing-at.test',
         ];
 
-        $response = $this->makeCall($data);
+        $response = $this->postJson(action(ResetPasswordController::class), $data);
 
         $response->assertUnprocessable();
         $response->assertJson(
@@ -57,7 +52,7 @@ final class ResetPasswordTest extends ApiTestCase
             'password' => '((((()))))',
         ];
 
-        $response = $this->makeCall($data);
+        $response = $this->postJson(action(ResetPasswordController::class), $data);
 
         $response->assertUnprocessable();
         $response->assertJson(

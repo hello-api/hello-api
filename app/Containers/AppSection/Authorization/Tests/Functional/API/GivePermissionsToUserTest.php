@@ -2,31 +2,26 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Functional\API;
 
-use App\Containers\AppSection\Authorization\Data\Factories\PermissionFactory;
+use App\Containers\AppSection\Authorization\Models\Permission;
 use App\Containers\AppSection\Authorization\Tests\Functional\ApiTestCase;
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\Authorization\UI\API\Controllers\GivePermissionsToUserController;
+use App\Containers\AppSection\User\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
 final class GivePermissionsToUserTest extends ApiTestCase
 {
-    protected string $endpoint = 'post@v1/users/{user_id}/permissions';
-
-    protected array $access = [
-        'permissions' => 'manage-permissions',
-        'roles' => null,
-    ];
-
     public function testGiveSinglePermission(): void
     {
-        $user = UserFactory::new()->createOne();
-        $permission = PermissionFactory::new()->createOne();
+        $user = User::factory()->admin()->createOne();
+        $this->actingAs($user);
+        $permission = Permission::factory()->createOne();
         $data = [
             'permission_ids' => [$permission->getHashedKey()],
         ];
 
-        $response = $this->injectId($user->id, replace: '{user_id}')->makeCall($data);
+        $response = $this->postJson(action(GivePermissionsToUserController::class, ['user_id' => $user->getHashedKey()]), $data);
 
         $response->assertOk();
         $response->assertJson(
@@ -42,14 +37,15 @@ final class GivePermissionsToUserTest extends ApiTestCase
 
     public function testGiveMultiplePermissions(): void
     {
-        $user = UserFactory::new()->createOne();
-        $permissionA = PermissionFactory::new()->createOne();
-        $permissionB = PermissionFactory::new()->createOne();
+        $user = User::factory()->admin()->createOne();
+        $this->actingAs($user);
+        $permissionA = Permission::factory()->createOne();
+        $permissionB = Permission::factory()->createOne();
         $data = [
             'permission_ids' => [$permissionA->getHashedKey(), $permissionB->getHashedKey()],
         ];
 
-        $response = $this->injectId($user->id, replace: '{user_id}')->makeCall($data);
+        $response = $this->postJson(action(GivePermissionsToUserController::class, ['user_id' => $user->getHashedKey()]), $data);
 
         $response->assertOk();
         $response->assertJson(
@@ -66,13 +62,14 @@ final class GivePermissionsToUserTest extends ApiTestCase
 
     public function testGiveNonExistingPermission(): void
     {
-        $user = UserFactory::new()->createOne();
-        $invalidId = $this->encode(7777777);
+        $user = User::factory()->admin()->createOne();
+        $this->actingAs($user);
+        $invalidId = 7777777;
         $data = [
-            'permission_ids' => [$invalidId],
+            'permission_ids' => [hashids()->encode($invalidId)],
         ];
 
-        $response = $this->injectId($user->id, replace: '{user_id}')->makeCall($data);
+        $response = $this->postJson(action(GivePermissionsToUserController::class, ['user_id' => $user->getHashedKey()]), $data);
 
         $response->assertUnprocessable();
         $response->assertJson(
@@ -86,21 +83,12 @@ final class GivePermissionsToUserTest extends ApiTestCase
         );
     }
 
-    public function testAttachPermissionToNonExistingRole(): void
+    public function testGivenUserHasNoAccessPreventsOperation(): void
     {
-        $permission = PermissionFactory::new()->createOne();
-        $invalidId = $this->encode(7777777);
-        $data = [
-            'permission_ids' => [$permission->getHashedKey()],
-        ];
+        $this->actingAs(User::factory()->createOne());
 
-        $response = $this->injectId($invalidId, skipEncoding: true, replace: '{user_id}')->makeCall($data);
+        $response = $this->postJson(action(GivePermissionsToUserController::class, ['user_id' => User::factory()->createOne()->getHashedKey()]));
 
-        $response->assertUnprocessable();
-        $response->assertJson(
-            static fn (AssertableJson $json): AssertableJson => $json->has('errors')
-                ->where('errors.user_id.0', 'The selected user id is invalid.')
-                ->etc(),
-        );
+        $response->assertForbidden();
     }
 }

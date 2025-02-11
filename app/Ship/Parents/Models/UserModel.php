@@ -2,13 +2,12 @@
 
 namespace App\Ship\Parents\Models;
 
-use Apiato\Core\Abstracts\Models\UserModel as AbstractUserModel;
-use App\Ship\Contracts\Authorizable;
+use Apiato\Abstract\Models\UserModel as AbstractUserModel;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-abstract class UserModel extends AbstractUserModel implements Authorizable
+abstract class UserModel extends AbstractUserModel
 {
     use Notifiable;
     use HasApiTokens;

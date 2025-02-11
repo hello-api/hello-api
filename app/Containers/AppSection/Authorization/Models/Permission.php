@@ -2,16 +2,14 @@
 
 namespace App\Containers\AppSection\Authorization\Models;
 
-use Apiato\Core\Contracts\HasResourceKey;
-use Apiato\Core\Traits\ModelTrait;
+use Apiato\Abstract\Models\ApiatoIntegration;
+use Apiato\Http\Resources\ResourceKeyAware;
 use App\Containers\AppSection\Authorization\Data\Collections\PermissionCollection;
 use Spatie\Permission\Models\Permission as SpatiePermission;
 
-class Permission extends SpatiePermission implements HasResourceKey
+class Permission extends SpatiePermission implements ResourceKeyAware
 {
-    use ModelTrait;
-
-    protected string $guard_name = 'api';
+    use ApiatoIntegration;
 
     protected $fillable = [
         'name',

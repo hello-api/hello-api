@@ -11,13 +11,24 @@ permissions:
   contents: read
 
 jobs:
-  tests:
+  matrix_prep:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nelonoel/branch-name@v1.0.1
+      - id: set-matrix
+        uses: JoshuaTheMiller/conditional-build-matrix@v2.0.1
+        with:
+          filter: '[?runOn==`${{ env.BRANCH_NAME }}` || runOn==`${{ github.event.pull_request.base.ref }}` || runOn==`always`]'
+  tests:
+    needs: matrix_prep
+    runs-on: ${{ matrix.runs_on }}
     strategy:
       fail-fast: true
-      matrix:
-        php: [ 8.1, 8.2 ]
-    name: PHP ${{ matrix.php }}
+      matrix: ${{fromJson(needs.matrix_prep.outputs.matrix)}}
+    name: PHP ${{ matrix.php_version }}
     timeout-minutes: 10
     services:
       postgres:
@@ -36,10 +47,10 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
+          php-version: ${{ matrix.php_version }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
           coverage: xdebug
-          tools: phpunit:10.x
+          tools: ${{ matrix.php_unit_version }}
 
       - name: Setup Composer token
         run: composer config -g github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}

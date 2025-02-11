@@ -12,22 +12,9 @@ final class ForgotPasswordRequestTest extends UnitTestCase
 {
     private ForgotPasswordRequest $request;
 
-    public function testAccess(): void
-    {
-        $this->assertSame([
-            'permissions' => null,
-            'roles' => null,
-        ], $this->request->getAccessArray());
-    }
-
     public function testDecode(): void
     {
         $this->assertSame([], $this->request->getDecodeArray());
-    }
-
-    public function testUrlParametersArray(): void
-    {
-        $this->assertSame([], $this->request->getUrlParametersArray());
     }
 
     public function testValidationRules(): void
@@ -39,13 +26,6 @@ final class ForgotPasswordRequestTest extends UnitTestCase
                 Rule::in(config('appSection-authentication.allowed-reset-password-urls')),
             ],
         ], $this->request->rules());
-    }
-
-    public function testAuthorizeMethodGateCall(): void
-    {
-        $request = ForgotPasswordRequest::injectData([], $this->getTestingUserWithoutAccess());
-
-        $this->assertTrue($request->authorize());
     }
 
     protected function setUp(): void

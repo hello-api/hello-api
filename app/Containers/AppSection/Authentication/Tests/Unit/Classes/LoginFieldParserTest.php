@@ -3,9 +3,9 @@
 namespace App\Containers\AppSection\Authentication\Tests\Unit\Classes;
 
 use App\Containers\AppSection\Authentication\Classes\LoginFieldParser;
+use App\Containers\AppSection\Authentication\DataTransferObjects\IncomingLoginField;
+use App\Containers\AppSection\Authentication\DataTransferObjects\LoginField;
 use App\Containers\AppSection\Authentication\Tests\UnitTestCase;
-use App\Containers\AppSection\Authentication\Values\IncomingLoginField;
-use App\Containers\AppSection\Authentication\Values\LoginField;
 use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;

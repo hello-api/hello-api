@@ -2,37 +2,45 @@
 
 namespace App\Containers\AppSection\Authorization\Tests\Functional\API;
 
-use App\Containers\AppSection\Authorization\Data\Factories\RoleFactory;
+use App\Containers\AppSection\Authorization\Models\Role;
 use App\Containers\AppSection\Authorization\Tests\Functional\ApiTestCase;
+use App\Containers\AppSection\Authorization\UI\API\Controllers\FindRoleByIdController;
+use App\Containers\AppSection\User\Models\User;
+use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
 final class FindRoleByIdTest extends ApiTestCase
 {
-    protected string $endpoint = 'get@v1/roles/{role_id}';
-
-    protected array $access = [
-        'permissions' => 'manage-roles',
-        'roles' => null,
-    ];
-
-    public function testFindRoleById(): void
+    public function testCanFindRoleById(): void
     {
-        $roleA = RoleFactory::new()->createOne();
+        $this->actingAs(User::factory()->admin()->createOne());
+        $roleA = Role::factory()->createOne();
 
-        $response = $this->injectId($roleA->id, replace: '{role_id}')->makeCall();
+        $response = $this->getJson(action(
+            FindRoleByIdController::class,
+            ['role_id' => $roleA->getHashedKey()],
+        ));
 
         $response->assertOk();
-        $responseContent = $this->getResponseContentObject();
-        $this->assertSame($roleA->name, $responseContent->data->name);
+        $response->assertJson(
+            static fn (AssertableJson $json) => $json->has(
+                'data',
+                static fn (AssertableJson $json) => $json->where('name', $roleA->name)
+                ->etc(),
+            )->etc(),
+        );
     }
 
-    public function testFindNonExistingRole(): void
+    public function testGivenUserHasNoAccessPreventsOperation(): void
     {
-        $invalidId = 7777777;
+        $this->actingAs(User::factory()->createOne());
 
-        $response = $this->injectId($invalidId, replace: '{role_id}')->makeCall();
+        $response = $this->getJson(action(
+            FindRoleByIdController::class,
+            ['role_id' => Role::factory()->createOne()->getHashedKey()],
+        ));
 
-        $response->assertNotFound();
+        $response->assertForbidden();
     }
 }

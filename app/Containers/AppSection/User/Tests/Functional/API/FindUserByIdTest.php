@@ -2,41 +2,27 @@
 
 namespace App\Containers\AppSection\User\Tests\Functional\API;
 
-use App\Containers\AppSection\User\Data\Factories\UserFactory;
+use App\Containers\AppSection\User\Models\User;
 use App\Containers\AppSection\User\Tests\Functional\ApiTestCase;
+use App\Containers\AppSection\User\UI\API\Controllers\FindUserByIdController;
 use Illuminate\Testing\Fluent\AssertableJson;
 use PHPUnit\Framework\Attributes\CoversNothing;
 
 #[CoversNothing]
 final class FindUserByIdTest extends ApiTestCase
 {
-    protected string $endpoint = 'get@v1/users/{user_id}';
-
-    protected array $access = [
-        'permissions' => null,
-        'roles' => null,
-    ];
-
-    public function testCanFindSelfAsAdmin(): void
+    public function testCanFindSelf(): void
     {
-        $this->testingUser = UserFactory::new()->admin()->createOne();
+        $user = User::factory()->createOne();
+        $this->actingAs($user);
 
-        $response = $this->injectId($this->testingUser->id, replace: '{user_id}')->makeCall();
+        $response = $this->getJson(action(FindUserByIdController::class, ['user_id' => $user->getHashedKey()]));
 
         $response->assertOk();
         $response->assertJson(
             fn (AssertableJson $json): AssertableJson => $json->has('data')
-                ->where('data.id', $this->encode($this->testingUser->id))
+                ->where('data.id', $user->getHashedKey())
                 ->etc(),
         );
-    }
-
-    public function testCanFindAnotherUserAsAdmin(): void
-    {
-        $this->testingUser = UserFactory::new()->admin()->createOne();
-
-        $response = $this->injectId(UserFactory::new()->createOne()->id, replace: '{user_id}')->makeCall();
-
-        $response->assertOk();
     }
 }

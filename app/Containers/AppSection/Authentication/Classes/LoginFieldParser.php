@@ -2,7 +2,7 @@
 
 namespace App\Containers\AppSection\Authentication\Classes;
 
-use App\Containers\AppSection\Authentication\Values\IncomingLoginField;
+use App\Containers\AppSection\Authentication\DataTransferObjects\IncomingLoginField;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 

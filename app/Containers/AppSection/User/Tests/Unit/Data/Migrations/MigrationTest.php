@@ -11,16 +11,16 @@ final class MigrationTest extends UnitTestCase
     public function testUsersTableHasExpectedColumns(): void
     {
         $columns = [
-            'id' => 'bigint',
-            'name' => 'string',
-            'email' => 'string',
-            'email_verified_at' => 'datetime',
-            'password' => 'string',
-            'gender' => 'string',
+            'id' => 'int8',
+            'name' => 'varchar',
+            'email' => 'varchar',
+            'email_verified_at' => 'timestamp',
+            'password' => 'varchar',
+            'gender' => 'varchar',
             'birth' => 'date',
-            'remember_token' => 'string',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
+            'remember_token' => 'varchar',
+            'created_at' => 'timestamp',
+            'updated_at' => 'timestamp',
         ];
 
         $this->assertDatabaseTable('users', $columns);
@@ -29,11 +29,25 @@ final class MigrationTest extends UnitTestCase
     public function testPasswordResetsTableHasExpectedColumns(): void
     {
         $columns = [
-            'email' => 'string',
-            'token' => 'string',
-            'created_at' => 'datetime',
+            'email' => 'varchar',
+            'token' => 'varchar',
+            'created_at' => 'timestamp',
         ];
 
         $this->assertDatabaseTable('password_reset_tokens', $columns);
+    }
+
+    public function testSessionsTableHasExpectedColumns(): void
+    {
+        $columns = [
+            'id' => 'varchar',
+            'user_id' => 'int8',
+            'ip_address' => 'varchar',
+            'user_agent' => 'text',
+            'payload' => 'text',
+            'last_activity' => 'int4',
+        ];
+
+        $this->assertDatabaseTable('sessions', $columns);
     }
 }

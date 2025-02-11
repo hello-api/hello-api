@@ -4,15 +4,10 @@ namespace App\Containers\AppSection\User\UI\API\Requests;
 
 use App\Containers\AppSection\User\Models\User;
 use App\Ship\Parents\Requests\Request as ParentRequest;
-use Illuminate\Contracts\Auth\Access\Gate;
 
 class DeleteUserRequest extends ParentRequest
 {
     protected array $decode = [
-        'user_id',
-    ];
-
-    protected array $urlParameters = [
         'user_id',
     ];
 
@@ -21,8 +16,8 @@ class DeleteUserRequest extends ParentRequest
         return [];
     }
 
-    public function authorize(Gate $gate): bool
+    public function authorize(): bool
     {
-        return $gate->allows('delete', [User::class]);
+        return $this->user()->can('delete', [User::class]);
     }
 }
